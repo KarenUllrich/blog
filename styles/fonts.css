@@ -1,0 +1,26 @@
+/* Fonts
+   Geist — Vercel, MIT license
+   FK Roman Standard — Florian Karsten (local prototype use only)
+*/
+
+@font-face {
+  font-family: "Geist";
+  src: url("../assets/fonts/Geist-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "FK Roman Standard";
+  src: url("../assets/fonts/FKRomanStandardVariable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --ff-sans: "Geist", Arial, sans-serif;
+  --ff-seri: "FK Roman Standard", Georgia, serif;
+  --ff-pixel: "Geist", monospace;
+}

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>AI INFRA BLOG</title>
+<link>https://blog.karenullrich.info/</link>
+<atom:link href="https://blog.karenullrich.info/index.xml" rel="self" type="application/rss+xml"/>
+<description>We write about privacy, security and reliability. </description>
+<generator>quarto-1.9.37</generator>
+<lastBuildDate>Tue, 05 May 2026 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Tufte Layout Demo:</title>
+  <dc:creator>Author </dc:creator>
+  <link>https://blog.karenullrich.info/posts/post-with-code/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>This post demonstrates the Tufte-style layout available in this blog. The body column stays narrow and readable; the right margin holds figures, notes, and asides without cluttering the main argument.<sup>1</sup></p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Margin notes are anchored to the paragraph they follow. On narrow screens they collapse below the text rather than overlapping it.</p></div></div><section id="equations" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="equations">Equations</h2>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Euler’s identity is often called the most beautiful equation in mathematics, conneccting the five fundamental constants <img src="https://latex.codecogs.com/png.latex?0,%201,%20e,%20i,%20%5Cpi"> in a single line.</p>
+</div><div id="fn2"><p><sup>2</sup>&nbsp;The quadratic formula follows directly from completing the square. It was known to Babylonian mathematicians around 2000 BCE, long before algebraic notation existed.</p></div></div><p>Inline math works as you’d expect: the area of a circle is <img src="https://latex.codecogs.com/png.latex?A%20=%20%5Cpi%20r%5E2">, and the quadratic formula gives <img src="https://latex.codecogs.com/png.latex?x%20=%20%5Cfrac%7B-b%20%5Cpm%20%5Csqrt%7Bb%5E2%20-%204ac%7D%7D%7B2a%7D">.<sup>2</sup></p>
+<p>Display equations use standard LaTeX delimiters. Maxwell’s equations in differential form:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cnabla%20%5Ccdot%20%5Cmathbf%7BE%7D%20=%20%5Cfrac%7B%5Crho%7D%7B%5Cvarepsilon_0%7D%0A%5Cqquad%0A%5Cnabla%20%5Ctimes%20%5Cmathbf%7BB%7D%20=%20%5Cmu_0%20%5Cmathbf%7BJ%7D%20+%20%5Cmu_0%20%5Cvarepsilon_0%20%5Cfrac%7B%5Cpartial%20%5Cmathbf%7BE%7D%7D%7B%5Cpartial%20t%7D%0A"></p>
+<p>The Gaussian integral is a workhorse of probability and physics:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cint_%7B-%5Cinfty%7D%5E%7B%5Cinfty%7D%20e%5E%7B-x%5E2%7D%5C,%20dx%20=%20%5Csqrt%7B%5Cpi%7D%0A"></p>
+</section>
+<section id="tables" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="tables">Tables</h2>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>The values in this table come from a hypothetical measurement series. In a real post, cite the source here rather than in a footnote, keeping the main text uncluttered.</p>
+</div><div id="fn3"><p><sup>3</sup>&nbsp;F₁ score is the harmonic mean of precision and recall: <img src="https://latex.codecogs.com/png.latex?F_1%20=%202%20%5Ccdot%20%5Cfrac%7BP%20%5Ccdot%20R%7D%7BP%20+%20R%7D">.</p></div></div><p>A simple comparison table in the main body.<sup>3</sup></p>
+<table class="table-striped table-hover caption-top table">
+<caption>Model comparison on the held-out test set.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Method</th>
+<th style="text-align: right;">Precision</th>
+<th style="text-align: right;">Recall</th>
+<th style="text-align: right;">F₁ Score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Baseline</td>
+<td style="text-align: right;">0.71</td>
+<td style="text-align: right;">0.68</td>
+<td style="text-align: right;">0.69</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fine-tuned</td>
+<td style="text-align: right;">0.84</td>
+<td style="text-align: right;">0.81</td>
+<td style="text-align: right;">0.82</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ensemble</td>
+<td style="text-align: right;">0.88</td>
+<td style="text-align: right;">0.86</td>
+<td style="text-align: right;">0.87</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Ours</strong></td>
+<td style="text-align: right;"><strong>0.93</strong></td>
+<td style="text-align: right;"><strong>0.91</strong></td>
+<td style="text-align: right;"><strong>0.92</strong></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="images" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="images">Images</h2>
+<section id="main-body-figure" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="main-body-figure">Main-body figure</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://blog.karenullrich.info/posts/post-with-code/image.jpg" class="img-fluid figure-img" alt="Sample post image"></p>
+<figcaption>A sample image at body width. Caption text sits below the figure in a smaller italic font.</figcaption>
+</figure>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><strong>Figure note.</strong> Margin figures work well for small supporting visuals — a detail crop, a diagram, a sparkline — that would break the text flow if placed inline.</p>
+</div></div></section>
+<section id="margin-figure" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="margin-figure">Margin figure</h3>
+<p>The same image can be pushed into the margin column using <code>.column-margin</code> around a standard Markdown image block:</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://blog.karenullrich.info/posts/post-with-code/image.jpg" class="img-fluid figure-img" alt="Margin figure example"></p>
+<figcaption>A figure placed entirely in the margin. It renders at the full margin width.</figcaption>
+</figure>
+</div>
+</div></div><p>Body text continues here and flows naturally past the margin figure on screens wide enough to show the two-column layout. On narrow screens the margin content collapses below the paragraph it annotates.</p>
+</section>
+</section>
+<section id="sidenotes-margin-notes" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="sidenotes-margin-notes">Sidenotes &amp; margin notes</h2>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>This is a pure text margin note — no number, just a floating aside. Use these for definitions, cross-references, or any thought that belongs near the text but not inside it.</p>
+</div></div><p>Quarto’s <code>.column-margin</code> div is the primary tool for Tufte-style marginalia. Place the div immediately after the paragraph it annotates and Quarto will align it vertically with that paragraph.</p>
+<p>You can put anything inside a margin div: prose, math, a figure, even a small table. The margin column is <code>310px</code> wide by default (set in <code>_quarto.yml</code>), so keep content concise.</p>
+</section>
+<section id="code" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="code">Code</h2>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><code>echo: false</code> suppresses the source block; only output appears. <code>column: margin</code> on a chunk pushes the output into the margin instead.</p>
+</div></div><p>A code block in the body renders at full body width with a subtle left-rule:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> math</span>
+<span id="cb1-2"></span>
+<span id="cb1-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> gaussian(x, mu<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, sigma<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>):</span>
+<span id="cb1-4">    coeff <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> (sigma <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> math.sqrt(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> math.pi))</span>
+<span id="cb1-5">    exponent <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>((x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> mu) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> sigma <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)</span>
+<span id="cb1-6">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> coeff <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> math.exp(exponent)</span>
+<span id="cb1-7"></span>
+<span id="cb1-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># evaluate at a few points</span></span>
+<span id="cb1-9"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> x <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> [<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>]:</span>
+<span id="cb1-10">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"g(</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>x<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:+}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">) = </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>gaussian(x)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:.4f}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div></div>
+<p>To push a code <em>output</em> into the margin, add <code>#| column: margin</code> at the top of an executable chunk — the source stays in the body, the plot or table appears beside it.</p>
+
+
+</section>
+
+
+ ]]></description>
+  <category>demo</category>
+  <category>layout</category>
+  <category>math</category>
+  <guid>https://blog.karenullrich.info/posts/post-with-code/</guid>
+  <pubDate>Tue, 05 May 2026 04:00:00 GMT</pubDate>
+</item>
+</channel>
+</rss>

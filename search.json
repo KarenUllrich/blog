@@ -1,0 +1,58 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "We are a loose collective of people writing about privacy, security and reliability in AI. Please subscribe to our substack to stay up to date with our latest posts."
+  },
+  {
+    "objectID": "posts/post-with-code/index.html",
+    "href": "posts/post-with-code/index.html",
+    "title": "Tufte Layout Demo:",
+    "section": "",
+    "text": "This post demonstrates the Tufte-style layout available in this blog. The body column stays narrow and readable; the right margin holds figures, notes, and asides without cluttering the main argument.1"
+  },
+  {
+    "objectID": "posts/post-with-code/index.html#equations",
+    "href": "posts/post-with-code/index.html#equations",
+    "title": "Tufte Layout Demo:",
+    "section": "Equations",
+    "text": "Equations\n\n\nEuler’s identity is often called the most beautiful equation in mathematics, conneccting the five fundamental constants \\(0, 1, e, i, \\pi\\) in a single line.\n2 The quadratic formula follows directly from completing the square. It was known to Babylonian mathematicians around 2000 BCE, long before algebraic notation existed.Inline math works as you’d expect: the area of a circle is \\(A = \\pi r^2\\), and the quadratic formula gives \\(x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}\\).2\nDisplay equations use standard LaTeX delimiters. Maxwell’s equations in differential form:\n\\[\n\\nabla \\cdot \\mathbf{E} = \\frac{\\rho}{\\varepsilon_0}\n\\qquad\n\\nabla \\times \\mathbf{B} = \\mu_0 \\mathbf{J} + \\mu_0 \\varepsilon_0 \\frac{\\partial \\mathbf{E}}{\\partial t}\n\\]\nThe Gaussian integral is a workhorse of probability and physics:\n\\[\n\\int_{-\\infty}^{\\infty} e^{-x^2}\\, dx = \\sqrt{\\pi}\n\\]"
+  },
+  {
+    "objectID": "posts/post-with-code/index.html#tables",
+    "href": "posts/post-with-code/index.html#tables",
+    "title": "Tufte Layout Demo:",
+    "section": "Tables",
+    "text": "Tables\n\n\nThe values in this table come from a hypothetical measurement series. In a real post, cite the source here rather than in a footnote, keeping the main text uncluttered.\n3 F₁ score is the harmonic mean of precision and recall: \\(F_1 = 2 \\cdot \\frac{P \\cdot R}{P + R}\\).A simple comparison table in the main body.3\n\nModel comparison on the held-out test set.\n\n\nMethod\nPrecision\nRecall\nF₁ Score\n\n\n\n\nBaseline\n0.71\n0.68\n0.69\n\n\nFine-tuned\n0.84\n0.81\n0.82\n\n\nEnsemble\n0.88\n0.86\n0.87\n\n\nOurs\n0.93\n0.91\n0.92"
+  },
+  {
+    "objectID": "posts/post-with-code/index.html#images",
+    "href": "posts/post-with-code/index.html#images",
+    "title": "Tufte Layout Demo:",
+    "section": "Images",
+    "text": "Images\n\nMain-body figure\n\n\n\nA sample image at body width. Caption text sits below the figure in a smaller italic font.\n\n\n\n\nFigure note. Margin figures work well for small supporting visuals — a detail crop, a diagram, a sparkline — that would break the text flow if placed inline.\n\n\nMargin figure\nThe same image can be pushed into the margin column using .column-margin around a standard Markdown image block:\n\n\n\n\n\nA figure placed entirely in the margin. It renders at the full margin width.\n\n\nBody text continues here and flows naturally past the margin figure on screens wide enough to show the two-column layout. On narrow screens the margin content collapses below the paragraph it annotates."
+  },
+  {
+    "objectID": "posts/post-with-code/index.html#sidenotes-margin-notes",
+    "href": "posts/post-with-code/index.html#sidenotes-margin-notes",
+    "title": "Tufte Layout Demo:",
+    "section": "Sidenotes & margin notes",
+    "text": "Sidenotes & margin notes\n\n\nThis is a pure text margin note — no number, just a floating aside. Use these for definitions, cross-references, or any thought that belongs near the text but not inside it.\nQuarto’s .column-margin div is the primary tool for Tufte-style marginalia. Place the div immediately after the paragraph it annotates and Quarto will align it vertically with that paragraph.\nYou can put anything inside a margin div: prose, math, a figure, even a small table. The margin column is 310px wide by default (set in _quarto.yml), so keep content concise."
+  },
+  {
+    "objectID": "posts/post-with-code/index.html#code",
+    "href": "posts/post-with-code/index.html#code",
+    "title": "Tufte Layout Demo:",
+    "section": "Code",
+    "text": "Code\n\n\necho: false suppresses the source block; only output appears. column: margin on a chunk pushes the output into the margin instead.\nA code block in the body renders at full body width with a subtle left-rule:\nimport math\n\ndef gaussian(x, mu=0, sigma=1):\n    coeff = 1 / (sigma * math.sqrt(2 * math.pi))\n    exponent = -((x - mu) ** 2) / (2 * sigma ** 2)\n    return coeff * math.exp(exponent)\n\n# evaluate at a few points\nfor x in [-2, -1, 0, 1, 2]:\n    print(f\"g({x:+}) = {gaussian(x):.4f}\")\nTo push a code output into the margin, add #| column: margin at the top of an executable chunk — the source stays in the body, the plot or table appears beside it."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "AI INFRA BLOG",
+    "section": "",
+    "text": "Tufte Layout Demo:\n\n\nA tour of the Tufte-style layout: sidenotes, margin figures, equations, tables, and code.\n\n\n\n\n\nMay 5, 2026\n\n\nAuthor\n\n\n\n\n\nNo matching items"
+  }
+]
