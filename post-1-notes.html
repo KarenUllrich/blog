@@ -6,11 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Author">
-<meta name="dcterms.date" content="2026-05-05">
-<meta name="description" content="A tour of the Tufte-style layout: sidenotes, margin figures, equations, tables, and code.">
 
-<title>Tufte Layout Demo: – AI INFRA BLOG</title>
+<title>post-1-notes – AI RELIABILITY REVIEW</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,61 +23,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-1eb1cc511b14054319277235af2df6cf.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-1eb1cc511b14054319277235af2df6cf.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -109,49 +71,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="../../styles/styles.css">
-<link rel="stylesheet" href="../../styles/fonts.css">
+<link rel="stylesheet" href="styles/styles.css">
+<link rel="stylesheet" href="styles/fonts.css">
 </head>
 
-<body class="floating nav-fixed slimcontent quarto-light">
+<body class="nav-fixed fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">AI INFRA BLOG</span>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">AI RELIABILITY REVIEW</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -161,9 +94,25 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="./index.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://aireliabilityreview.substack.com/"> <i class="bi bi-substack" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/channel/UCvSEVmHduXD5dbAxT0Hq4uQ"> <i class="bi bi-youtube" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./editors.html"> 
+<span class="menu-text">EDITORS;</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -173,188 +122,48 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title">Tufte Layout Demo:</h1>
-                  <div>
-        <div class="description">
-          A tour of the Tufte-style layout: sidenotes, margin figures, equations, tables, and code.
-        </div>
-      </div>
-                          <div class="quarto-categories">
-                <div class="quarto-category">demo</div>
-                <div class="quarto-category">layout</div>
-                <div class="quarto-category">math</div>
-              </div>
-                  </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      <div>
-      <div class="quarto-title-meta-heading">Author</div>
-      <div class="quarto-title-meta-contents">
-               <p>Author </p>
-            </div>
-    </div>
-      
-      <div>
-      <div class="quarto-title-meta-heading">Published</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date">May 5, 2026</p>
-      </div>
-    </div>
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul class="collapse">
-  <li><a href="#equations" id="toc-equations" class="nav-link active" data-scroll-target="#equations">Equations</a></li>
-  <li><a href="#tables" id="toc-tables" class="nav-link" data-scroll-target="#tables">Tables</a></li>
-  <li><a href="#images" id="toc-images" class="nav-link" data-scroll-target="#images">Images</a></li>
-  <li><a href="#sidenotes-margin-notes" id="toc-sidenotes-margin-notes" class="nav-link" data-scroll-target="#sidenotes-margin-notes">Sidenotes &amp; margin notes</a></li>
-  <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code">Code</a></li>
-  </ul>
-</nav>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-    </div>
+    
 <!-- main -->
-<main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
 
+<p>post1 notes</p>
+<ul>
+<li>consider providing gentler definitions for
+<ul>
+<li>prompt injections / jailbreaks; not everyone knows what these terms mean, so good to define them clearly at the start.</li>
+<li>“system level control”: which is a nuanced new term</li>
+</ul></li>
+<li>title could be more user friendly:
+<ul>
+<li>the term “privilege erosion” isn’t the most clear for a general audience. For me the theme is that agents bring a new era of unmitigable set of risks.</li>
+<li>“system control” is suggeestive of “loss of control” / XAI terms, which we may not want to evoke</li>
+</ul></li>
+<li>love the examples; no harm in McDonald’s answering coding questions</li>
+<li>Alignment is never guaranteed
+<ul>
+<li>Additional context can change condition therefore the distribution; the space is large as you argue, so guarantees with reasonable bounds are not possible. Very clear.</li>
+<li>Great to have all the citations on the side + diagrams are so good!</li>
+<li>“Alignment can act on a finite set of example?”: can training a finite set of examples affect the entire distribution? This is worth explaining more.
+<ul>
+<li>Presumably if the context necessary to shift the conditional distribution towards undesired outputs is in the “nooks and cranies” would it not also be hard for an adversary to find it?</li>
+<li>what about gating the model outputs? That is a finite set we can more easily assess and is perhaps closer to what we propose</li>
+</ul></li>
+</ul></li>
+<li>I like the point about no separation between data and control in LLMs, a new paradigm that’s especially challenging compared to traditional systems. I find this argument and conclusion very compelling.</li>
+<li>Privilege erosion:
+<ul>
+<li>nice to end on this as a broader consequence</li>
+<li>what about instruction hierarchy? would that not encourage the model to prioritize system instructions over user inputs?</li>
+</ul></li>
+<li>nitpicks: “a moment at the moment”, System-level implications needs a space to render properly</li>
+</ul>
 
-<p>This post demonstrates the Tufte-style layout available in this blog. The body column stays narrow and readable; the right margin holds figures, notes, and asides without cluttering the main argument.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Margin notes are anchored to the paragraph they follow. On narrow screens they collapse below the text rather than overlapping it.</p></div></div><section id="equations" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="equations">Equations</h2>
-
-<div class="no-row-height column-margin column-container"><div class="">
-<p>Euler’s identity is often called the most beautiful equation in mathematics, conneccting the five fundamental constants <span class="math inline">\(0, 1, e, i, \pi\)</span> in a single line.</p>
-</div><div id="fn2"><p><sup>2</sup>&nbsp;The quadratic formula follows directly from completing the square. It was known to Babylonian mathematicians around 2000 BCE, long before algebraic notation existed.</p></div></div><p>Inline math works as you’d expect: the area of a circle is <span class="math inline">\(A = \pi r^2\)</span>, and the quadratic formula gives <span class="math inline">\(x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}\)</span>.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
-<p>Display equations use standard LaTeX delimiters. Maxwell’s equations in differential form:</p>
-<p><span class="math display">\[
-\nabla \cdot \mathbf{E} = \frac{\rho}{\varepsilon_0}
-\qquad
-\nabla \times \mathbf{B} = \mu_0 \mathbf{J} + \mu_0 \varepsilon_0 \frac{\partial \mathbf{E}}{\partial t}
-\]</span></p>
-<p>The Gaussian integral is a workhorse of probability and physics:</p>
-<p><span class="math display">\[
-\int_{-\infty}^{\infty} e^{-x^2}\, dx = \sqrt{\pi}
-\]</span></p>
-</section>
-<section id="tables" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="tables">Tables</h2>
-
-<div class="no-row-height column-margin column-container"><div class="">
-<p>The values in this table come from a hypothetical measurement series. In a real post, cite the source here rather than in a footnote, keeping the main text uncluttered.</p>
-</div><div id="fn3"><p><sup>3</sup>&nbsp;F₁ score is the harmonic mean of precision and recall: <span class="math inline">\(F_1 = 2 \cdot \frac{P \cdot R}{P + R}\)</span>.</p></div></div><p>A simple comparison table in the main body.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
-<table class="table-striped table-hover caption-top table">
-<caption>Model comparison on the held-out test set.</caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Method</th>
-<th style="text-align: right;">Precision</th>
-<th style="text-align: right;">Recall</th>
-<th style="text-align: right;">F₁ Score</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Baseline</td>
-<td style="text-align: right;">0.71</td>
-<td style="text-align: right;">0.68</td>
-<td style="text-align: right;">0.69</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Fine-tuned</td>
-<td style="text-align: right;">0.84</td>
-<td style="text-align: right;">0.81</td>
-<td style="text-align: right;">0.82</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Ensemble</td>
-<td style="text-align: right;">0.88</td>
-<td style="text-align: right;">0.86</td>
-<td style="text-align: right;">0.87</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><strong>Ours</strong></td>
-<td style="text-align: right;"><strong>0.93</strong></td>
-<td style="text-align: right;"><strong>0.91</strong></td>
-<td style="text-align: right;"><strong>0.92</strong></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="images" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="images">Images</h2>
-<section id="main-body-figure" class="level3 page-columns page-full">
-<h3 class="anchored" data-anchor-id="main-body-figure">Main-body figure</h3>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="image.jpg" class="img-fluid figure-img" alt="Sample post image"></p>
-<figcaption>A sample image at body width. Caption text sits below the figure in a smaller italic font.</figcaption>
-</figure>
-</div>
-
-<div class="no-row-height column-margin column-container"><div class="">
-<p><strong>Figure note.</strong> Margin figures work well for small supporting visuals — a detail crop, a diagram, a sparkline — that would break the text flow if placed inline.</p>
-</div></div></section>
-<section id="margin-figure" class="level3 page-columns page-full">
-<h3 class="anchored" data-anchor-id="margin-figure">Margin figure</h3>
-<p>The same image can be pushed into the margin column using <code>.column-margin</code> around a standard Markdown image block:</p>
-
-<div class="no-row-height column-margin column-container"><div class="">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="image.jpg" class="img-fluid figure-img" alt="Margin figure example"></p>
-<figcaption>A figure placed entirely in the margin. It renders at the full margin width.</figcaption>
-</figure>
-</div>
-</div></div><p>Body text continues here and flows naturally past the margin figure on screens wide enough to show the two-column layout. On narrow screens the margin content collapses below the paragraph it annotates.</p>
-</section>
-</section>
-<section id="sidenotes-margin-notes" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="sidenotes-margin-notes">Sidenotes &amp; margin notes</h2>
-
-<div class="no-row-height column-margin column-container"><div class="">
-<p>This is a pure text margin note — no number, just a floating aside. Use these for definitions, cross-references, or any thought that belongs near the text but not inside it.</p>
-</div></div><p>Quarto’s <code>.column-margin</code> div is the primary tool for Tufte-style marginalia. Place the div immediately after the paragraph it annotates and Quarto will align it vertically with that paragraph.</p>
-<p>You can put anything inside a margin div: prose, math, a figure, even a small table. The margin column is <code>310px</code> wide by default (set in <code>_quarto.yml</code>), so keep content concise.</p>
-</section>
-<section id="code" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="code">Code</h2>
-
-<div class="no-row-height column-margin column-container"><div class="">
-<p><code>echo: false</code> suppresses the source block; only output appears. <code>column: margin</code> on a chunk pushes the output into the margin instead.</p>
-</div></div><p>A code block in the body renders at full body width with a subtle left-rule:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gaussian(x, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">1</span>):</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    coeff <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> (sigma <span class="op">*</span> math.sqrt(<span class="dv">2</span> <span class="op">*</span> math.pi))</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    exponent <span class="op">=</span> <span class="op">-</span>((x <span class="op">-</span> mu) <span class="op">**</span> <span class="dv">2</span>) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> sigma <span class="op">**</span> <span class="dv">2</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> coeff <span class="op">*</span> math.exp(exponent)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># evaluate at a few points</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> [<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>]:</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"g(</span><span class="sc">{</span>x<span class="sc">:+}</span><span class="ss">) = </span><span class="sc">{</span>gaussian(x)<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>To push a code <em>output</em> into the margin, add <code>#| column: margin</code> at the top of an executable chunk — the source stays in the body, the plot or table appears beside it.</p>
-
-
-</section>
 
 
 </main> <!-- /main -->
@@ -500,7 +309,7 @@ window.Quarto = {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/blog\.karenullrich\.info");
+        var filterRegex = new RegExp("https:\/\/reliable-ai\.review");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

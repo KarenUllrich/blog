@@ -1,58 +1,30 @@
 [
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "editors.html",
+    "href": "editors.html",
+    "title": "EDITORS;",
     "section": "",
-    "text": "We are a loose collective of people writing about privacy, security and reliability in AI. Please subscribe to our substack to stay up to date with our latest posts."
+    "text": "Karen Ullrich\nMark Ibrahim\nCandace Ross\nJingtong Sun"
   },
   {
-    "objectID": "posts/post-with-code/index.html",
-    "href": "posts/post-with-code/index.html",
-    "title": "Tufte Layout Demo:",
+    "objectID": "editors.html#list-of-editors",
+    "href": "editors.html#list-of-editors",
+    "title": "EDITORS;",
     "section": "",
-    "text": "This post demonstrates the Tufte-style layout available in this blog. The body column stays narrow and readable; the right margin holds figures, notes, and asides without cluttering the main argument.1"
+    "text": "Karen Ullrich\nMark Ibrahim\nCandace Ross\nJingtong Sun"
   },
   {
-    "objectID": "posts/post-with-code/index.html#equations",
-    "href": "posts/post-with-code/index.html#equations",
-    "title": "Tufte Layout Demo:",
-    "section": "Equations",
-    "text": "Equations\n\n\nEuler’s identity is often called the most beautiful equation in mathematics, conneccting the five fundamental constants \\(0, 1, e, i, \\pi\\) in a single line.\n2 The quadratic formula follows directly from completing the square. It was known to Babylonian mathematicians around 2000 BCE, long before algebraic notation existed.Inline math works as you’d expect: the area of a circle is \\(A = \\pi r^2\\), and the quadratic formula gives \\(x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}\\).2\nDisplay equations use standard LaTeX delimiters. Maxwell’s equations in differential form:\n\\[\n\\nabla \\cdot \\mathbf{E} = \\frac{\\rho}{\\varepsilon_0}\n\\qquad\n\\nabla \\times \\mathbf{B} = \\mu_0 \\mathbf{J} + \\mu_0 \\varepsilon_0 \\frac{\\partial \\mathbf{E}}{\\partial t}\n\\]\nThe Gaussian integral is a workhorse of probability and physics:\n\\[\n\\int_{-\\infty}^{\\infty} e^{-x^2}\\, dx = \\sqrt{\\pi}\n\\]"
-  },
-  {
-    "objectID": "posts/post-with-code/index.html#tables",
-    "href": "posts/post-with-code/index.html#tables",
-    "title": "Tufte Layout Demo:",
-    "section": "Tables",
-    "text": "Tables\n\n\nThe values in this table come from a hypothetical measurement series. In a real post, cite the source here rather than in a footnote, keeping the main text uncluttered.\n3 F₁ score is the harmonic mean of precision and recall: \\(F_1 = 2 \\cdot \\frac{P \\cdot R}{P + R}\\).A simple comparison table in the main body.3\n\nModel comparison on the held-out test set.\n\n\nMethod\nPrecision\nRecall\nF₁ Score\n\n\n\n\nBaseline\n0.71\n0.68\n0.69\n\n\nFine-tuned\n0.84\n0.81\n0.82\n\n\nEnsemble\n0.88\n0.86\n0.87\n\n\nOurs\n0.93\n0.91\n0.92"
-  },
-  {
-    "objectID": "posts/post-with-code/index.html#images",
-    "href": "posts/post-with-code/index.html#images",
-    "title": "Tufte Layout Demo:",
-    "section": "Images",
-    "text": "Images\n\nMain-body figure\n\n\n\nA sample image at body width. Caption text sits below the figure in a smaller italic font.\n\n\n\n\nFigure note. Margin figures work well for small supporting visuals — a detail crop, a diagram, a sparkline — that would break the text flow if placed inline.\n\n\nMargin figure\nThe same image can be pushed into the margin column using .column-margin around a standard Markdown image block:\n\n\n\n\n\nA figure placed entirely in the margin. It renders at the full margin width.\n\n\nBody text continues here and flows naturally past the margin figure on screens wide enough to show the two-column layout. On narrow screens the margin content collapses below the paragraph it annotates."
-  },
-  {
-    "objectID": "posts/post-with-code/index.html#sidenotes-margin-notes",
-    "href": "posts/post-with-code/index.html#sidenotes-margin-notes",
-    "title": "Tufte Layout Demo:",
-    "section": "Sidenotes & margin notes",
-    "text": "Sidenotes & margin notes\n\n\nThis is a pure text margin note — no number, just a floating aside. Use these for definitions, cross-references, or any thought that belongs near the text but not inside it.\nQuarto’s .column-margin div is the primary tool for Tufte-style marginalia. Place the div immediately after the paragraph it annotates and Quarto will align it vertically with that paragraph.\nYou can put anything inside a margin div: prose, math, a figure, even a small table. The margin column is 310px wide by default (set in _quarto.yml), so keep content concise."
-  },
-  {
-    "objectID": "posts/post-with-code/index.html#code",
-    "href": "posts/post-with-code/index.html#code",
-    "title": "Tufte Layout Demo:",
-    "section": "Code",
-    "text": "Code\n\n\necho: false suppresses the source block; only output appears. column: margin on a chunk pushes the output into the margin instead.\nA code block in the body renders at full body width with a subtle left-rule:\nimport math\n\ndef gaussian(x, mu=0, sigma=1):\n    coeff = 1 / (sigma * math.sqrt(2 * math.pi))\n    exponent = -((x - mu) ** 2) / (2 * sigma ** 2)\n    return coeff * math.exp(exponent)\n\n# evaluate at a few points\nfor x in [-2, -1, 0, 1, 2]:\n    print(f\"g({x:+}) = {gaussian(x):.4f}\")\nTo push a code output into the margin, add #| column: margin at the top of an executable chunk — the source stays in the body, the plot or table appears beside it."
+    "objectID": "post-1-notes.html",
+    "href": "post-1-notes.html",
+    "title": "AI RELIABILITY REVIEW",
+    "section": "",
+    "text": "post1 notes\n\nconsider providing gentler definitions for\n\nprompt injections / jailbreaks; not everyone knows what these terms mean, so good to define them clearly at the start.\n“system level control”: which is a nuanced new term\n\ntitle could be more user friendly:\n\nthe term “privilege erosion” isn’t the most clear for a general audience. For me the theme is that agents bring a new era of unmitigable set of risks.\n“system control” is suggeestive of “loss of control” / XAI terms, which we may not want to evoke\n\nlove the examples; no harm in McDonald’s answering coding questions\nAlignment is never guaranteed\n\nAdditional context can change condition therefore the distribution; the space is large as you argue, so guarantees with reasonable bounds are not possible. Very clear.\nGreat to have all the citations on the side + diagrams are so good!\n“Alignment can act on a finite set of example?”: can training a finite set of examples affect the entire distribution? This is worth explaining more.\n\nPresumably if the context necessary to shift the conditional distribution towards undesired outputs is in the “nooks and cranies” would it not also be hard for an adversary to find it?\nwhat about gating the model outputs? That is a finite set we can more easily assess and is perhaps closer to what we propose\n\n\nI like the point about no separation between data and control in LLMs, a new paradigm that’s especially challenging compared to traditional systems. I find this argument and conclusion very compelling.\nPrivilege erosion:\n\nnice to end on this as a broader consequence\nwhat about instruction hierarchy? would that not encourage the model to prioritize system instructions over user inputs?\n\nnitpicks: “a moment at the moment”, System-level implications needs a space to render properly"
   },
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "AI INFRA BLOG",
+    "title": "AI RELIABILITY REVIEW",
     "section": "",
-    "text": "Tufte Layout Demo:\n\n\nA tour of the Tufte-style layout: sidenotes, margin figures, equations, tables, and code.\n\n\n\n\n\nMay 5, 2026\n\n\nAuthor\n\n\n\n\n\nNo matching items"
+    "text": "No matching items"
   }
 ]
