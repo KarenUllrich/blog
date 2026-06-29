@@ -15,7 +15,155 @@
   &lt;li&gt;&lt;strong&gt;Societal:&lt;/strong&gt; Considering how these systems shape - and are shaped by - human behavior.&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-<generator>quarto-1.9.37</generator>
-<lastBuildDate>Tue, 12 May 2026 22:25:42 GMT</lastBuildDate>
+<generator>quarto-1.9.38</generator>
+<lastBuildDate>Sun, 28 Jun 2026 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>On the Impossibility of Mitigating AI Jailbreaks</title>
+  <dc:creator>[Karen Ullrich](https://karenullrich.info/)</dc:creator>
+  <link>https://reliable-ai.review/posts/2026-05-priviledge_erosion/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>Prompt injections and jailbreaks are having a moment in AI media coverage at the moment …</p>
+<p><br></p>
+<div class="quarto-layout-panel" data-layout="[[1,1,1]]">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="assets/mcdonalds.jpeg" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="McDonald’s AI solves python problems."><img src="https://reliable-ai.review/posts/2026-05-priviledge_erosion/assets/mcdonalds.jpeg" class="img-fluid figure-img" alt="McDonald’s AI solves python problems."></a></p>
+<figcaption>McDonald’s AI solves python problems.</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="assets/xAI.mp4" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="xAI, targeted presumably at children, helps to build a bomb."><video src="assets/xAI.mp4" class="img-fluid" controls=""></video></a><a href="assets/xAI.mp4">xAI, targeted presumably at children, helps to build a bomb.</a></p>
+<figcaption>xAI, targeted presumably at children, helps to build a bomb.</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="assets/sonic.webp" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="ChatGPT breaks copyright when sufficiently prompted."><img src="https://reliable-ai.review/posts/2026-05-priviledge_erosion/assets/sonic.webp" class="img-fluid figure-img" alt="ChatGPT breaks copyright when sufficiently prompted."></a></p>
+<figcaption>ChatGPT breaks copyright when sufficiently prompted.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>… and for good reason: We observe a wide range of (often funny) failures: The McDonald’s customer support bot intended to assist with ordering food can be enticed to solve python puzzles<sup>1</sup>; xAI’s chatbots targeted at presumably young audiences can, under repeated prompting, provide instructions on how to build a pipe bomb<sup>2</sup>; And ChatGPT models can generate copyrighted characters when sufficiently described<sup>3</sup>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Source: <a href="https://www.linkedin.com/posts/michael-kisilenko-ceo_stop-paying-for-claude-code-mcdonalds-activity-7452593681913692160-0NnU/">LinkedIn</a></p></div><div id="fn2"><p><sup>2</sup>&nbsp;Source: <a href="https://www.instagram.com/reels/DUWJ1S5DzTm/">Instagram Reel</a></p></div><div id="fn3"><p><sup>3</sup>&nbsp;Source: <a href="https://www.reddit.com/r/aiwars/comments/1lwq3zv/if_you_dont_think_ai_is_copying_look_at_this/">Reddit</a></p></div><div id="fn4"><p><sup>4</sup>&nbsp;See <a href="https://rlhfbook.com/">Reinforcement Learning from Human Feedback</a> by Nathan Lambert or <a href="https://arxiv.org/pdf/2412.05265#page=146.08">Reinforcement Learning: An Overview Chapter 6</a> by Kevin Murphy for an introduction to these techniques.</p></div></div><p>These failures stem from a breakdown in the separation between developer-intended control instructions and user-provided input in LLM-based systems, and are referred to as jailbreaking, policy evasion, or prompt injections. The standard mitigation for these failures is alignment post-training, which trains models on curated examples via supervised fine-tuning and reinforcement learning from human feedback<sup>4</sup> to follow intended instructions and adhere to safety policies. However, alignment only changes what the model is <em>likely</em> to do, not what it is <em>able</em> to do: it reshapes the distribution over possible outputs without imposing hard constraints on behavior.</p>
+<p>This post develops that intuition and shows how it can be systematically exploited<sup>5</sup>. The argument then traces how jailbreaking combined with a lack of separation between control and data can produce systematic failures of system-level control.</p>
+<div class="no-row-height column-margin column-container"><div id="fn5"><p><sup>5</sup>&nbsp;Note that the following section is an intuitive version of our NeurIPS 2025 paper: <a href="https://arxiv.org/abs/2408.01420">Mission Impossible: A Statistical Perspective on Jailbreaking LLMs</a>. For a more rigorous treatment of the argument, I refer the reader to the paper.</p></div></div><section id="alignment-is-never-guaranteed" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="alignment-is-never-guaranteed">Alignment is never guaranteed</h2>
+<section id="llms-through-a-probabilistic-lens" class="level4">
+<h4 class="anchored" data-anchor-id="llms-through-a-probabilistic-lens">LLMs through a probabilistic lens</h4>
+<p>From a probabilistic perspective, large language models can be understood as defining very high-dimensional distributions over sequences. For the purposes of illustration, we begin with a simple low-dimensional example. Assume there exists a ground-truth distribution over two random variables: shape and color. A generative model can be trained to approximate this distribution by observing samples drawn from it. In the simplest case, we could imagine explicitly representing the full joint distribution, where each combination of shape and color is assigned a probability. Whenever we observe an object, we increase the likelihood assigned to that event in our joint distribution.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="assets/1.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Learning a generative model p_{\text{model}}, from samples stemming from a source distribution p_{\text{data}}."><img src="https://reliable-ai.review/posts/2026-05-priviledge_erosion/assets/1.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Pre-training figure"></a></p>
+</figure>
+</div>
+<figcaption>Learning a generative model <img src="https://latex.codecogs.com/png.latex?p_%7B%5Ctext%7Bmodel%7D%7D">, from samples stemming from a source distribution <img src="https://latex.codecogs.com/png.latex?p_%7B%5Ctext%7Bdata%7D%7D">.</figcaption>
+</figure>
+</div>
+<p>The challenge becomes apparent as we scale this setup: In our simple example, we have two variables (shape and color), each with three possible values—(red, blue, green) and (circle, triangle, square). This results in <img src="https://latex.codecogs.com/png.latex?3%5E2%20=%209"> possible outcomes, and thus nine probabilities to determine. With language, this grows substantially. Each position in a sequence of text is a random variable with vocabulary size on the order of tens of thousands. For a standard vocabulary of <img src="https://latex.codecogs.com/png.latex?16,000"> tokens and context length of <img src="https://latex.codecogs.com/png.latex?1,024"> tokens, the number of possible sequences is <img src="https://latex.codecogs.com/png.latex?16%7B,%7D000%5E%7B1024%7D%20%5Capprox%2010%5E%7B4305%7D">. This number vastly exceeds the number of particles in the observable universe (approximately <img src="https://latex.codecogs.com/png.latex?10%5E%7B80%7D">). It also far exceeds the amount of available training data: estimates suggest that all text on the internet amounts to roughly <img src="https://latex.codecogs.com/png.latex?10%5E%7B12%7D"> to <img src="https://latex.codecogs.com/png.latex?10%5E%7B14%7D"> tokens.</p>
+<p>While LLMs do not explicitly represent this joint distribution, they nonetheless induce a probability distribution over this space of sequences, and that we can exploit.</p>
+</section>
+<section id="how-does-alignment-change-p_textmodel" class="level4">
+<h4 class="anchored" data-anchor-id="how-does-alignment-change-p_textmodel">How does alignment change <img src="https://latex.codecogs.com/png.latex?p_%7B%5Ctext%7Bmodel%7D%7D">?</h4>
+<p>To make this concrete, we return to our toy example. Let one variable (color) represent the <strong>request</strong> (e.g., “Tell me how to bake a cake”), and the other variable (shape) represent the <strong>response</strong>. Each point in the joint distribution corresponds to a (request, response) pair.</p>
+<p>Some of these pairs are undesirable, for example, a harmful request paired with a compliant response, such as (“Tell me how to build bio weapons”, “Of course, you will need …”). In our illustration, we represent such cases as blue squares.</p>
+<p>In practice, we do not have direct access to the model’s full joint distribution. Instead, alignment operates indirectly: we provide examples of desirable and undesirable behaviors and update the model to increase or decrease their likelihood. In particular, we penalize outputs corresponding to undesirable pairs (like blue squares), encouraging the model to assign them lower probability.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="assets/2.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Through specific examples, harmful outcomes become rare (blue squares, marked red)."><img src="https://reliable-ai.review/posts/2026-05-priviledge_erosion/assets/2.svg" class="img-fluid figure-img" alt="Alignment figure"></a></p>
+<figcaption>Through specific examples, harmful outcomes become rare (blue squares, marked red).</figcaption>
+</figure>
+</div>
+</section>
+<section id="how-an-attacker-can-avoid-alignment" class="level4 page-columns page-full">
+<h4 class="anchored" data-anchor-id="how-an-attacker-can-avoid-alignment">How an attacker can avoid alignment</h4>
+<p>Alignment has reduced the likelihood of undesirable outcomes: harmful (request, response) pairs are rare under the model distribution, and we would be unlikely to encounter such behavior through standard sampling.</p>
+<p>This changes once we condition on additional context. To illustrate this, we introduce a third variable: a <em>modifier</em> that changes how the request is phrased without changing its underlying intent. In practice, this could correspond to something like: “Let’s role-play—you are a superhero who must save the planet, and the only way to do so is to…” We represent such modifiers as animals, for example 🐰.</p>
+<p><a href="assets/3.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="https://reliable-ai.review/posts/2026-05-priviledge_erosion/assets/3.svg" class="img-fluid" alt="Alignment figure"></a></p>
+<p>Note that while the probability of a harmful pair <img src="https://latex.codecogs.com/png.latex?P(%F0%9F%9F%A6)%20=%200.006">, and its joint probability with a specific modifier <img src="https://latex.codecogs.com/png.latex?P(%20%F0%9F%9F%A6%20,%20%F0%9F%90%B0)%20=%200.004"> can be small, the conditional probability can be much higher.</p>
+<p><img src="https://latex.codecogs.com/png.latex?P(%20%F0%9F%9F%A6%20%5Cmid%20%F0%9F%90%B0)%20=%20%5Cfrac%7BP(%20%F0%9F%9F%A6,%20%F0%9F%90%B0)%7D%7BP(%F0%9F%90%B0)%7D%20%5Capprox%200.260"></p>
+<p>Despite being rare overall, the harmful outcome becomes likely once we condition on 🐰. Low joint probability does not imply low conditional probability.</p>
+<p>Why not simply defend against 🐰 during alignment? The problem is scale. In high-dimensional input spaces, combinatorially many modifiers (alternative phrasings, contexts, compositions) can shift the conditional distribution in similar ways. Alignment acts on a small set of examples, leaving vast regions of the input space weakly constrained. From the attacker’s perspective, finding one such unconstrained region is tractable. From the defender’s perspective, covering all such regions is not. <sup>6</sup></p>
+<div class="no-row-height column-margin column-container"><div id="fn6"><p><sup>6</sup>&nbsp;In the paper, we make a more precise argument about the volume of such regions, and their ratio.</p></div><div id="fn7"><p><sup>7</sup>&nbsp;For example, see <a href="https://arxiv.org/pdf/2306.05499">Prompt Injection attack against LLM-integrated Applications</a>, <a href="https://icml.cc/virtual/2025/poster/44613">AdvPrompter: Fast Adaptive Adversarial Prompting for LLMs</a>, or <a href="https://arxiv.org/abs/2510.04885">RL Is a Hammer and LLMs Are Nails: A Simple Reinforcement Learning Recipe for Strong Prompt Injection</a> for SOTA attacks.</p></div></div><p>Up to this point, we have only argued that conditioning variables (like 🐰) <strong>exist</strong>. Attackers must also <strong>find</strong> them—but this is not prohibitive. Because inputs can be iteratively refined, attackers can search the input space manually or automatically to discover prompts that induce desired behavior. This optimization problem seeks a prompt maximizing the likelihood of a specific outcome. The resulting prompts are called <em>jailbreaks</em> or <em>prompt injections</em> <sup>7</sup>. Note that access to a model’s likelihoods is not necessary for such attacks.</p>
+</section>
+</section>
+<section id="llms-became-agentic" class="level2">
+<h2 class="anchored" data-anchor-id="llms-became-agentic">LLMs became agentic</h2>
+<p>Above we have established that harmful responses cannot be fully eliminated from the model distribution, and attackers can search for inputs that make such behaviors likely. When LLMs are chat companions, this is concerning but damage is somewhat limited. At worst, a model generates bad advice or inappropriate content—content that could in many cases be found elsewhere (Google, Reddit). This changes with agentic uses such as coding, research, UI, and general OS-level agents.</p>
+<p>In these settings, the model does not just generate text, it acts, for instance by executing code. When using a coding agent such as <a href="https://github.com/anthropics/claude-code">Claude Code</a>, the system executes actions based on model outputs: editing files, or running bash commands. More generally, this class of agents is called <a href="https://arxiv.org/pdf/2210.03629">ReAct agents</a>. Its actions are determined by the LLM’s output, which is determined by an input stream: system prompt, user instructions, tool calls, and retrieved content such as websites or documents.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="assets/4.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Schematic of a ReAct agent, ClaudeCode is a ReAct agent."><img src="https://reliable-ai.review/posts/2026-05-priviledge_erosion/assets/4.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%" alt="agent-figure"></a></p>
+</figure>
+</div>
+<figcaption>Schematic of a ReAct agent, <a href="https://huggingface.co/blog/kobe0938/context-engineering-reuse-pattern-claude-code">ClaudeCode</a> is a ReAct agent.</figcaption>
+</figure>
+</div>
+</section>
+<section id="the-result-is-privilege-erosion" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="the-result-is-privilege-erosion">The result is privilege erosion</h2>
+<p>In classical computer security, severe vulnerabilities arise when <strong>data is interpreted as control</strong>. A canonical example is buffer overflow: user-provided input is written into memory without proper separation, allowing it to overwrite control structures such as return addresses. Similarly, in SQL injection, untrusted input is interpreted as part of a query, enabling attackers to modify the program’s behavior. In both, the root cause is the failure to maintain a clear boundary between data and control. Modern systems close this gap architecturally i.e.&nbsp;a return address is not executable data, and an SQL parameter is not parsed as syntax—through type systems, memory safety, and parameterized queries.</p>
+<p>A ReAct agent reintroduces similar problems: Its instructions and the data it acts on—e.g., retrieved documents, tool outputs, web pages, git repositories—arrive through the same input stream. Hence, LLM systems collapse the control plane into the data plane.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="assets/5.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="An agent is an LLM whose output is interpreted as control. Here, an attacker has poisoned a website read by the agent to manipulate its behavior."><img src="https://reliable-ai.review/posts/2026-05-priviledge_erosion/assets/5.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="agent-figure"></a></p>
+</figure>
+</div>
+<figcaption>An agent is an LLM whose output is interpreted as control. Here, an attacker has poisoned a website read by the agent to manipulate its behavior.</figcaption>
+</figure>
+</div>
+<p>While classical systems close the data/control vulnerabilities architecturally, LLM-based systems close it only statistically. Mitigation strategies such as learned instruction hierarchies<sup>8</sup> train the model to weight system prompts above user input, and user input above retrieved content - but the previous section showed that statistical boundaries are exactly what jailbreaks breach easily. An attacker who places a 🐰-style modifier anywhere in the input stream i.e.&nbsp;a webpage, a document, a git repo, any library; can shift the model toward following their instructions instead of the user’s.</p>
+<div class="no-row-height column-margin column-container"><div id="fn8"><p><sup>8</sup>&nbsp;See <a href="https://arxiv.org/abs/2404.13208">The Instruction Hierarchy: Training LLMs to Prioritize Privileged Instructions</a>.</p></div></div><p>Hence, an AI agent operating with a defined privilege set (read, write, execute) may inadvertently propagate those privileges to any process with access to any portion of its input stream. Because there is no way to enforce that lower-trust inputs carry less weight than higher-trust instructions, <strong>AI agents cause Privilege Erosion across the entire system</strong>. Once an attacker can place content anywhere the agent reads from, they have a channel to its actions—without ever interacting with the system directly.</p>
+<p>For people building applications, this changes the typical threat model. Software has always treated the operating system as a trusted, neutral foundation: the layer below your application is not your adversary. An agent that sits at that layer—reading messages, calendars, files—and is steerable by anything it reads breaks this assumption. The computer itself becomes part of the attack surface. Meredith Whittaker and Udbhav Tiwari made a similar argument at 39C3, describing how agentic access invalidates the threat models secure messaging apps are built on<sup>9</sup>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn9"><p><sup>9</sup>&nbsp;<a href="https://media.ccc.de/v/39c3-ai-agent-ai-spy">AI Agent, AI Spy</a>, 39C3.</p></div></div><section id="where-this-plays-out" class="level4 page-columns page-full">
+<h4 class="anchored" data-anchor-id="where-this-plays-out">Where this plays out</h4>
+<p>A few examples of this principle that might seem familiar to readers;</p>
+<p>Summer Yue / OpenClaw (February 2026)<sup>10</sup>. Summer Yue, director of alignment at Meta Superintelligence Labs, granted an AI agent access to her email inbox and asked it to suggest what should be archived — but not to take any action. As the inbox filled the agent’s context window, compaction caused her earlier safety instruction to be silently discarded, after which the agent began mass-deleting emails and ignored repeated commands to stop. The safety constraint was not bypassed by an adversary — it was erased by the agent’s own internal memory management. Privilege erosion without even an attacker in the loop.</p>
+<div class="no-row-height column-margin column-container"><div id="fn10"><p><sup>10</sup>&nbsp;<a href="https://www.fastcompany.com/91497841/meta-superintelligence-lab-ai-safety-alignment-director-lost-control-of-agent-deleted-her-emails">FastCompany article</a>, No shade to Summer Yue — publicly sharing an embarrassing incident like this, especially in a role as visible as hers, takes real courage. That kind of openness is exactly how we learn.</p></div><div id="fn11"><p><sup>11</sup>&nbsp;<a href="https://www.404media.co/hackers-simply-asked-meta-ai-to-give-them-access-to-high-profile-instagram-accounts-it-worked/">404Media article</a></p></div></div><p>Meta AI Support Agent (June 2026)<sup>11</sup>. Attackers exploited Meta’s AI support chatbot by asking it to link a target Instagram account to an attacker-controlled email address, resulting in a wave of high-profile account takeovers — including the Obama White House page and Sephora. The chatbot reset account credentials without independently verifying identity, effectively turning a high-trust security tool into a vulnerability. The agent had write-level access to account settings, and anyone who could send it a message had a channel to those actions.</p>
+</section>
+<section id="mitigation-separating-control-from-data" class="level4 page-columns page-full">
+<h4 class="anchored" data-anchor-id="mitigation-separating-control-from-data">Mitigation: Separating control from data ?</h4>
+<p>One response is to stop relying on the model to maintain this boundary and enforce it architecturally instead, so called agent harnessing. CaMeL<sup>12</sup> wraps the LLM in a system that tracks which values came from untrusted sources and prevents them from influencing control flow, achieving provable guarantees on a specific agent benchmark.</p>
+<div class="no-row-height column-margin column-container"><div id="fn12"><p><sup>12</sup>&nbsp;See <a href="https://arxiv.org/abs/2503.18813">Defeating Prompt Injections by Design</a> (CaMeL).</p></div></div><p>This works when a task’s data and control can be separated in advance. Most agentic tasks, however, do not have this property: “finish the items on my todo list” requires the agent to read each item—data—and execute it as an instruction—control. The content of the list determines what the agent does next; that is the task. Architectural separation either falls back to the model’s judgment at exactly these points, or restricts agents to tasks where data never becomes control—a small fraction of what makes agents useful.</p>
+<p>Another proposal is to gate LLM outputs: dangerous commands will not be executed. However, it is nearly impossible (or more precisely, computationally intractable) for a system defender to predict whether a given set of actions will result in dangerous or harmless behavior in any Turing-complete language, such as Python or Bash. This is because determining whether an arbitrary program will exhibit harmful behavior is equivalent to the halting problem, which Alan Turing proved to be undecidable in 1937 — meaning no general algorithm can exist that correctly classifies all possible programs as safe or unsafe<sup>13</sup>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn13"><p><sup>13</sup>&nbsp;You may read the <a href="https://londmathsoc.onlinelibrary.wiley.com/doi/pdf/10.1112/plms/s2-42.1.230?saml_referrer=">original work</a>, but honestly the <a href="https://en.wikipedia.org/wiki/Halting_problem#cite_note-1">wiki article</a> is better gateway to the topic.</p></div></div></section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>My prediction: It is going to be worse before it gets better: Adversaries can hide malicious instructions in a variety of places: a web-browsing agent encounters hidden instructions embedded in a page it was asked to summarize, a RAG pipeline retrieves a document containing anything from anywhere, a coding agent incorporates adversarial instructions from a dependency or issue tracker into code it commits to a shared repository or a UI agent with access to email or messages acts on instructions embedded in a message it was never asked to act on — to just name a few threat surfaces.</p>
+<p>Sharing the digital world with AI agents is likely gonna be in our future, but we need to seriously rethink and restructure how the infrastructure that we developed in the past 70 years must be modified to coexist with AI.</p>
+<p><br></p>
+<div class="text-center">
+<p>If you want to discuss these and other topics, consider joining our <a href="https://discord.gg/RZHSpYuqbz"><strong>Discord server</strong></a>.</p>
+</div>
+
+
+</section>
+
+
+ ]]></description>
+  <category>position</category>
+  <guid>https://reliable-ai.review/posts/2026-05-priviledge_erosion/</guid>
+  <pubDate>Sun, 28 Jun 2026 04:00:00 GMT</pubDate>
+</item>
 </channel>
 </rss>
