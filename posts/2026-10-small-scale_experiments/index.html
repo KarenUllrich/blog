@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Nicholas Lourie, Kyunghyun Cho, Karen Ullrich, Sanae Lotfi">
+<meta name="dcterms.date" content="2026-10-19">
+<meta name="description" content="Scaling laws promise that we can run cheap experiments on small models and extrapolate to large ones. In practice, laws fit on small models have looked unreliable, and many researchers concluded that experiments on sizable models cannot be avoided. Our results challange this view.">
+
+<title>Small-Scale Experiments: Are We There Yet? – AI RELIABILITY REVIEW</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-887cb95d8abf5ad28a22599edb5cda31.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles/styles.css">
+<link rel="stylesheet" href="../../styles/fonts.css">
+<link rel="stylesheet" href="post.css">
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">AI RELIABILITY REVIEW</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://aireliabilityreview.substack.com/"> <i class="bi bi-substack" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://discord.gg/RZHSpYuqbz"> <i class="bi bi-discord" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Small-Scale Experiments: Are We There Yet?</h1>
+                  <div>
+        <div class="description">
+          Scaling laws promise that we can run cheap experiments on small models and extrapolate to large ones. In practice, laws fit on small models have looked unreliable, and many researchers concluded that experiments on sizable models cannot be avoided. Our results challange this view.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">Paper Digest</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Nicholas Lourie, Kyunghyun Cho, Karen Ullrich, Sanae Lotfi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 19, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#what-are-scaling-laws-and-what-do-we-use-them-for" id="toc-what-are-scaling-laws-and-what-do-we-use-them-for" class="nav-link active" data-scroll-target="#what-are-scaling-laws-and-what-do-we-use-them-for">What are scaling laws, and what do we use them for?</a></li>
+  <li><a href="#so-what-do-you-do-if-your-scaling-law-is-off-and-what-could-have-caused-this-failure" id="toc-so-what-do-you-do-if-your-scaling-law-is-off-and-what-could-have-caused-this-failure" class="nav-link" data-scroll-target="#so-what-do-you-do-if-your-scaling-law-is-off-and-what-could-have-caused-this-failure">So what do you do if your scaling law is off and what could have caused this failure?</a></li>
+  <li><a href="#so-what-do-we-recommend-for-optimal-scaling" id="toc-so-what-do-we-recommend-for-optimal-scaling" class="nav-link" data-scroll-target="#so-what-do-we-recommend-for-optimal-scaling">So what do we recommend for optimal scaling?</a></li>
+  <li><a href="#citation" id="toc-citation" class="nav-link" data-scroll-target="#citation">Citation</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<div class="tldr callout callout-style-simple callout-note no-icon callout-titled" title="TL;DR">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>TL;DR
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Scaling laws promise that we can run cheap experiments on small models and extrapolate to large ones. In practice, laws fit on small models have looked unreliable, and many researchers concluded that experiments on sizable models cannot be avoided. We find that scaling laws hold all the way down to 4M parameters, but small models follow them only when each model is tuned close to the best loss its hyperparameters can reach. In fact, we demonstrate that small models are much more sensitive to their hyperparameters than large ones, so tuning can take hundreds of configurations per model size at small scales. The noisy quadratic, a quadratic description of the loss near the best hyperparameters, models this tuning noise well and tells us how many runs each scale needs. The small scale sensitivity to hyperparameters is not a big limitation in practice, since small runs are cheap. Therefore, the level of rigor required for proper scaling is affordable, and we show how to split a compute budget across model sizes to make the extrapolation as accurate as possible. Figure 1 summarizes these findings. Finally, we recommend the following to practitioners: tune thoroughly at small scales, use fewer runs at large scales, check each assumption with simple diagnostics, and compare models where scaling laws are most reliable.</p>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figures/fig1_overview.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure 1. Scaling laws hold at small scales and are predictive of larger scales when we thoroughly tune the hyperparameters at the small scales. (a) Each dot is one hyperparameter configuration sampled at random for a model of that size, with a fixed architecture and with the learning rate, batch size, and five other training hyperparameters drawn from the same ranges at every size. A dot’s distance from the center grows with how far its loss is above the best configuration at that size. The shaded circle marks a gap of 0.1 bits per character (BPC) and has the same size in both panels. 10 out of 126 configurations fall inside it at 4M parameters vs.&nbsp;36 out of 128 at 134M, counting only runs that finished training (2 of the 128 runs at 4M diverged). Crosses mark configurations that ended more than 2 BPC worse than the best. (b) We fit the scaling law on 4M to 34M parameters and test it on larger models (stars). If we fit to the best of 4 random configurations per size (gray, a typical draw), the scaling law predicts 0.63 BPC for the 268M model, which actually reaches 0.76. If we fit to the best of all 128 configurations (colored dots), it predicts 0.77 and passes close to all three held-out models. (c) When parameters and data grow together, the cost of a run grows roughly with the square of the model size, so one 268M run costs as much as 4,988 runs at 4M, and searching 128 configurations at 4M costs 2.6% of one 268M run. All plots use actual data from our runs."><img src="figures/fig1_overview.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Figure 1. Scaling laws hold at small scales and are predictive of larger scales when we thoroughly tune the hyperparamet"></a></p>
+</figure>
+</div>
+<figcaption><strong>Figure 1. Scaling laws hold at small scales and are predictive of larger scales when we thoroughly tune the hyperparameters at the small scales.</strong> (a) Each dot is one hyperparameter configuration sampled at random for a model of that size, with a fixed architecture and with the learning rate, batch size, and five other training hyperparameters drawn from the same ranges at every size. A dot’s distance from the center grows with how far its loss is above the best configuration at that size. The shaded circle marks a gap of 0.1 bits per character (BPC) and has the same size in both panels. 10 out of 126 configurations fall inside it at 4M parameters vs.&nbsp;36 out of 128 at 134M, counting only runs that finished training (2 of the 128 runs at 4M diverged). Crosses mark configurations that ended more than 2 BPC worse than the best. (b) We fit the scaling law on 4M to 34M parameters and test it on larger models (stars). If we fit to the best of 4 random configurations per size (gray, a typical draw), the scaling law predicts 0.63 BPC for the 268M model, which actually reaches 0.76. If we fit to the best of all 128 configurations (colored dots), it predicts 0.77 and passes close to all three held-out models. (c) When parameters and data grow together, the cost of a run grows roughly with the square of the model size, so one 268M run costs as much as 4,988 runs at 4M, and searching 128 configurations at 4M costs 2.6% of one 268M run. All plots use actual data from our runs.</figcaption>
+</figure>
+</div>
+<section id="what-are-scaling-laws-and-what-do-we-use-them-for" class="level2">
+<h2 class="anchored" data-anchor-id="what-are-scaling-laws-and-what-do-we-use-them-for">What are scaling laws, and what do we use them for?</h2>
+<p>Training a large language model can cost millions of dollars, so before launching the final run, we want to be confident in every choice that goes into it, from the architecture and the optimizer to the learning rate, the batch size, and how long to train. A wrong choice at that scale can waste much of the budget, and we cannot afford to try the alternatives at full size. Scaling laws are how we make these choices without paying for full-size trials. We train many small models, measure how their loss improves as they grow, and extrapolate to the size we care about.</p>
+<p>Most of what we know about building language models comes from experiments, and experiments have become expensive. The cost of training the most compute-intensive models has grown by about 2.4 times per year since 2016 (Cottier et al.&nbsp;<a href="#ref-1" class="citation-ref">[1]</a>), and most of the compute that goes into developing a model is spent on experiments, with only a minority going to the final training run (Denain and Wu <a href="#ref-2" class="citation-ref">[2]</a>). In parallel, the science of scaling has been evolving and dictates that instead of tuning hyperparameters on big models, we can train many small models, learn from them, and extrapolate, so that we get the big model right in one go (Liang and Hashimoto <a href="#ref-3" class="citation-ref">[3]</a>, <a href="https://www.youtube.com/watch?v=6Q-ESEmDf4Q&amp;t=94s">Lecture 9</a>). Scaling laws are the tool that makes this extrapolation possible.</p>
+<p>A scaling law is an empirical formula that predicts the loss of a model from the resources used to train it. The most common form, popularized by Hoffmann et al.&nbsp;<a href="#ref-4" class="citation-ref">[4]</a> and building on Rosenfeld et al.&nbsp;<a href="#ref-5" class="citation-ref">[5]</a>, writes the pretraining loss as a function of the number of parameters <em>p</em> and the number of training tokens <em>d</em>,</p>
+<p><span class="math display">\[\mathcal{L}(p, d) = \epsilon + \frac{\zeta}{p^{\iota}} + \frac{\eta}{d^{\kappa}}\]</span></p>
+<p>The constant ε is the irreducible loss, the loss that even an infinitely large model trained on infinite data would pay because text is inherently unpredictable. The other two terms are the excess loss from having finitely many parameters and from training on finitely many tokens. The constants ζ and η set the size of these two terms, and the exponents ι and κ set how fast each term shrinks as we add parameters and tokens. We fit all five constants, ε, ζ, η, ι, and κ, to the losses of small models and use the fitted formula to predict the loss of larger ones. Compute grows with the product of parameters and tokens, so for a fixed budget the formula also tells us how to trade parameters against data. On a log-log plot, the loss looks like a straight line until it starts to bend toward ε.</p>
+<p>The idea of scaling laws predates large language models, since Cortes et al.&nbsp;<a href="#ref-6" class="citation-ref">[6]</a> already fit learning curves of this shape on small runs and extrapolated them (Liang and Hashimoto <a href="#ref-3" class="citation-ref">[3]</a>, <a href="https://www.youtube.com/watch?v=6Q-ESEmDf4Q&amp;t=315s">Lecture 9</a>). Hestness et al.&nbsp;<a href="#ref-7" class="citation-ref">[7]</a> and Kaplan et al.&nbsp;<a href="#ref-8" class="citation-ref">[8]</a> then found power laws across domains and over many orders of magnitude, and Hoffmann et al.&nbsp;<a href="#ref-4" class="citation-ref">[4]</a> trained over 400 models to conclude that parameters and tokens should grow at the same rate, about 20 tokens per parameter.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figures/fig2_uses.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure 2. Three objectives that the scaling laws achieve. (Left) Predict the loss of a large run from small runs we can afford. (Middle) Compare two model families by how they scale. If family B reaches every loss with less compute than family A, B is the better choice at any scale. (Right) Pick the model size for a compute budget, since for each budget the loss is lowest at one model size. All three panels are schematic."><img src="figures/fig2_uses.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Figure 2. Three objectives that the scaling laws achieve"></a></p>
+</figure>
+</div>
+<figcaption><strong>Figure 2. Three objectives that the scaling laws achieve.</strong> (Left) Predict the loss of a large run from small runs we can afford. (Middle) Compare two model families by how they scale. If family B reaches every loss with less compute than family A, B is the better choice at any scale. (Right) Pick the model size for a compute budget, since for each budget the loss is lowest at one model size. All three panels are schematic.</figcaption>
+</figure>
+</div>
+<p>Scaling laws achieve three objectives:</p>
+<ol type="1">
+<li><p>They <strong>predict the loss</strong> of a large run before we pay for it, as OpenAI did for some aspects of GPT-4 using models trained with at most one thousandth of its compute (OpenAI <a href="#ref-9" class="citation-ref">[9]</a>). The left panel of Figure 2 sketches this use.</p></li>
+<li><p>They let us <strong>compare designs</strong> by how they scale. Kaplan et al.&nbsp;<a href="#ref-8" class="citation-ref">[8]</a> compared LSTMs with transformers by training both at many compute levels and found a constant gap, with LSTMs needing many times more compute for the same loss, an answer that would otherwise have required training a very large LSTM (Liang and Hashimoto <a href="#ref-3" class="citation-ref">[3]</a>, <a href="https://www.youtube.com/watch?v=6Q-ESEmDf4Q&amp;t=1646s">Lecture 9</a>). The middle panel of Figure 2 sketches such a comparison, where family B reaches every loss with less compute than family A.</p></li>
+<li><p>They tell us <strong>how to spend a given compute</strong> budget. For each budget, we train models of several sizes and find the size with the lowest loss, which is how Llama 3 chose its model size (Grattafiori et al.&nbsp;<a href="#ref-10" class="citation-ref">[10]</a>). The right panel of Figure 2 shows how the best model size grows with the budget.</p></li>
+</ol>
+<p>Scaling laws also guide and depend on hyperparameters, since the best learning rate and batch size shift as models grow (Liang and Hashimoto <a href="#ref-3" class="citation-ref">[3]</a>, <a href="https://www.youtube.com/watch?v=6Q-ESEmDf4Q&amp;t=2064s">Lecture 9</a>), so some teams fit power laws to their best values (DeepSeek-AI <a href="#ref-11" class="citation-ref">[11]</a>, Li et al.&nbsp;<a href="#ref-12" class="citation-ref">[12]</a>, Bergsma et al.&nbsp;<a href="#ref-13" class="citation-ref">[13]</a>). Others use a parametrization such as muP, which rescales the initialization and the learning rate of each layer with the width so that the best learning rate stays roughly fixed, and tune once on a small model (Yang et al.&nbsp;<a href="#ref-14" class="citation-ref">[14]</a>, Liang and Hashimoto <a href="#ref-3" class="citation-ref">[3]</a>, <a href="https://www.youtube.com/watch?v=6Q-ESEmDf4Q&amp;t=2386s">Lecture 9</a>). Downstream accuracy is harder to predict, since scaling laws are well behaved for the pretraining loss but much less so for benchmark accuracy (Liang and Hashimoto <a href="#ref-3" class="citation-ref">[3]</a>, <a href="https://www.youtube.com/watch?v=6Q-ESEmDf4Q&amp;t=2553s">Lecture 9</a>), and a recent meta-analysis found that only 39% of downstream scaling laws were predictable (Lourie, Hu, and Cho <a href="#ref-15" class="citation-ref">[15]</a>).</p>
+<p>In summary, the design procedure for scaling usually implies training a few small models spanning a couple of orders of magnitude in compute, checking that the loss follows a clean law, and using the law to set hyperparameters and choose architectures for the large run (Liang and Hashimoto <a href="#ref-3" class="citation-ref">[3]</a>, <a href="https://www.youtube.com/watch?v=6Q-ESEmDf4Q&amp;t=2676s">Lecture 9</a>). If this worked as advertised, most of the cost of model development would disappear since it would move to smaller scales that cost significantly less than larger runs, as Figure 1(c) shows. In the remainder of this post, we explain why scaling laws might fail to deliver on this promise and how to remedy such failure.</p>
+</section>
+<section id="so-what-do-you-do-if-your-scaling-law-is-off-and-what-could-have-caused-this-failure" class="level2">
+<h2 class="anchored" data-anchor-id="so-what-do-you-do-if-your-scaling-law-is-off-and-what-could-have-caused-this-failure">So what do you do if your scaling law is off and what could have caused this failure?</h2>
+<p>The two most influential scaling studies on scaling laws already disagree. Kaplan et al.&nbsp;<a href="#ref-8" class="citation-ref">[8]</a> found that the best model size grows with compute to the power 0.73, while Hoffmann et al.&nbsp;<a href="#ref-4" class="citation-ref">[4]</a> found 0.50, and follow-up work traced the gap to choices that look like details, such as how to count parameters, how long to warm up, whether to retune the optimizer at each scale, and cosine schedules that cannot be cut short (Porian et al.&nbsp;<a href="#ref-16" class="citation-ref">[16]</a>, Pearce and Song <a href="#ref-17" class="citation-ref">[17]</a>, Liang and Hashimoto <a href="#ref-3" class="citation-ref">[3]</a>, <a href="https://www.youtube.com/watch?v=6Q-ESEmDf4Q&amp;t=3121s">Lecture 9</a>). A replication of one of Chinchilla’s fits traced its disagreement with the other methods to the curve fitting rather than the data (Besiroglu et al.&nbsp;<a href="#ref-18" class="citation-ref">[18]</a>), and a survey of more than 50 scaling studies found laws built from models with 100M parameters or fewer unreliable (Li, Kudugunta, and Zettlemoyer <a href="#ref-19" class="citation-ref">[19]</a>). Li et al.&nbsp;<a href="#ref-20" class="citation-ref">[20]</a> call this <strong>the scaling gap</strong>, where insights from small-scale experiments fail to transfer to larger scales, and many concluded that scaling laws only become reliable at large scales.</p>
+<p>We argue the opposite in this work and show that scaling laws hold for models as small as 4M parameters, which train in under an hour on a single GPU. Earlier work did not reach this conclusion because small models are much more sensitive to their hyperparameters, which makes them much harder to tune.</p>
+<section id="scaling-laws-describe-the-fully-tuned-frontier" class="level3">
+<h3 class="anchored" data-anchor-id="scaling-laws-describe-the-fully-tuned-frontier">Scaling laws describe the fully tuned frontier</h3>
+<div class="definition callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>What we mean by the fully tuned frontier.</strong> For a given number of parameters and training tokens, the fully tuned frontier is the best loss that any hyperparameter configuration can reach. A scaling law describes this frontier, whereas a typical training run results in a loss somewhere above it, and how far above depends on how thorough the tuning was.</p>
+</div>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figures/fig3_frontier.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure 3. The scaling law describes the fully tuned frontier. Each curve is one configuration from our random search, evaluated at eight training lengths, colored by model size from 4M (purple) to 268M (yellow) parameters. The dotted line is the lowest loss reached at each compute budget, which is the fully tuned frontier. All runs use one fixed architecture per size."><img src="figures/fig3_frontier.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Figure 3. The scaling law describes the fully tuned frontier"></a></p>
+</figure>
+</div>
+<figcaption><strong>Figure 3. The scaling law describes the fully tuned frontier.</strong> Each curve is one configuration from our random search, evaluated at eight training lengths, colored by model size from 4M (purple) to 268M (yellow) parameters. The dotted line is the lowest loss reached at each compute budget, which is the fully tuned frontier. All runs use one fixed architecture per size.</figcaption>
+</figure>
+</div>
+<div class="definition callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Our setup.</strong> We train Llama-style models with Meta Lingua <a href="#ref-21" class="citation-ref">[21]</a> on FineWeb-Edu <a href="#ref-22" class="citation-ref">[22]</a>, at sizes that double from 4M to 268M parameters, counting parameters the way compute scales (Porian et al.&nbsp;<a href="#ref-16" class="citation-ref">[16]</a>). In our main experiments, each size has one fixed architecture, as is common practice, and we sample 128 configurations of seven training hyperparameters at random (64 at 268M), including the learning rate, batch size, and Adam’s β1 and β2, from the same ranges at every size. We later added configurations at the four smallest sizes, for up to 934 per size, and a second set of experiments also samples the number of layers and attention heads. Each configuration is evaluated at eight training lengths, from 5 to 40 tokens per parameter, with the learning rate decayed at the end of each one. We fit laws on 4M to 34M, use 67M and 134M for validation, and test on 268M, so every number we report measures extrapolation to larger held-out models.</p>
+</div>
+</div>
+</div>
+<p>Figure 3 shows every run in our search, and its dotted line marks the frontier, which different runs reach at different compute budgets. To fit the law, we take the lowest validation loss, in bits per character, over all configurations at each model size and training length, so different points can come from different configurations. Like prior work (Hilton et al.&nbsp;<a href="#ref-23" class="citation-ref">[23]</a>, Li, Kudugunta, and Zettlemoyer <a href="#ref-19" class="citation-ref">[19]</a>), we found that the shortest runs fit poorly, so we drop the lengths of 5 and 10 tokens per parameter and fit the remaining 24 points, from 15 to 40 tokens per parameter at the four fitting sizes. In our ablations, taking the best configuration for each training length instead of the best run for each size halved the test error, decaying the learning rate cut it by 98%, and six ways of counting parameters all gave reasonable laws, although their test errors still differ by more than two orders of magnitude.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figures/fig4_tuning.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure 4. The fit improves with more tuning. From left to right, the panels fit the scaling law with the best of 4, 16, 64, and 256 random configurations per model size and compare predicted with actual loss on the sizes used for fitting (train), the sizes used for validation (val), and the held-out 268M model (test)."><img src="figures/fig4_tuning.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Figure 4. The fit improves with more tuning"></a></p>
+</figure>
+</div>
+<figcaption><strong>Figure 4. The fit improves with more tuning.</strong> From left to right, the panels fit the scaling law with the best of 4, 16, 64, and 256 random configurations per model size and compare predicted with actual loss on the sizes used for fitting (train), the sizes used for validation (val), and the held-out 268M model (test).</figcaption>
+</figure>
+</div>
+<p>In Figure 4, we show how the amount of tuning determines how well the law fits and extrapolates. In its leftmost panel, with the best of 4 random configurations per size, the losses scatter around the fit, and the law misses the held-out 268M model with a test mean squared error of 1.3e-2. The test error is still 6.0e-3 with 16 configurations in the second panel and 2.8e-3 with 64 in the third, and with 256 in the rightmost panel it falls to 3.7e-6, <strong>more than 3,000 times smaller than with 4.</strong> Figure 1(b) shows the same effect on a single prediction, where the law fit to the best of 4 configurations predicts 0.63 bits per character for the 268M model, which reaches 0.76, while the law fit to all 128 predicts 0.77. These numbers depend on the search space, which Appendix B of our paper <a href="#ref-24" class="citation-ref">[24]</a> lists in full. We believe a good range is one where the best configuration lands inside it rather than at its edge, and we kept this consideration in mind as we designed the search space.</p>
+<div class="definition callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Distinguishing our contributions from common wisdom and existing work.</strong> That small models need careful tuning is not news to practitioners (Ivgi et al.&nbsp;<a href="#ref-25" class="citation-ref">[25]</a>). What we contribute in this work is an understanding of how much more tuning they need and why, how to check that a search has gone far enough, and how to split a budget across sizes. Hyperparameter under-tuning has also been shown in the literature to result in misleading conclusions. For instance, Xiao <a href="#ref-26" class="citation-ref">[26]</a> concluded that small batch sizes train language models poorly, and Marek et al.&nbsp;<a href="#ref-27" class="citation-ref">[27]</a> showed in their Figure 5 that this came from leaving Adam’s β2 untuned for the small batches.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="small-models-are-harder-to-tune" class="level3">
+<h3 class="anchored" data-anchor-id="small-models-are-harder-to-tune">Small models are harder to tune</h3>
+<p>We demonstrate that small models need this much tuning <em>because</em> they are more sensitive to their hyperparameters. This may seem counterintuitive, since large runs are the ones we hear about failing, but both observations do not contradict each other. Instabilities do appear as training scales up especially beyond the sizes we cover here, and easier tuning does not make large-scale training simple. What we quantify here is that under the same search space, the share of configurations that reach a near-optimal loss grows with model size, so we find that below roughly 67M parameters tuning has to be intensive.</p>
+<p>Random search quantifies this notion of sensitivity, since the share of uniformly sampled configurations that land near the best loss tells us how much of the space is good. Figure 1(a) shows this share at two sizes. At 4M parameters, only 10 out of the 126 configurations that finished training, about 8%, land within 0.1 bits per character of the best one, while at 134M, 36 out of 128 do, about 28%. Figure 5 shows the full distribution of losses at 4M, 17M, 67M, and 268M. From left to right, it goes from broad and flat at 4M to a narrow peak next to the best loss at 268M.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figures/fig5_distributions.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure 5. Larger models are easier to tune. Distributions of final validation loss over all random configurations at 4M, 17M, 67M, and 268M parameters, from left to right. Panel titles give model size in effective parameters, our parameter count."><img src="figures/fig5_distributions.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Figure 5. Larger models are easier to tune"></a></p>
+</figure>
+</div>
+<figcaption><strong>Figure 5. Larger models are easier to tune.</strong> Distributions of final validation loss over all random configurations at 4M, 17M, 67M, and 268M parameters, from left to right. Panel titles give model size in effective parameters, our parameter count.</figcaption>
+</figure>
+</div>
+<div class="takeaway callout callout-style-simple callout-tip no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Takeaway 1. Small-scale experiments are more sensitive to tuning.</strong></p>
+<p>Under the same search space, far fewer configurations land near the best loss at small scales, so small models need many more tuning runs before their best losses follow the scaling law.</p>
+</div>
+</div>
+</div>
+<p>To see why this is the case, consider the loss as a function of the hyperparameters. Near the optimum it looks like a bowl with a few steep directions and many nearly flat ones, blurred a little by noise from random seeds, a model that Lourie et al.&nbsp;<a href="#ref-28" class="citation-ref">[28]</a> call the noisy quadratic and show to fit well. With one steep direction, a random configuration only needs to land near the optimum along that direction, whereas with two it must do so along both at once, so good configurations become much rarer.</p>
+<div class="definition callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>What we mean by the effective number of hyperparameters.</strong> It is the number of steep directions in the bowl around the optimum, written γ. We estimate it by fitting the noisy quadratic to the best losses from random search. Because it describes the loss surface near the optimum, it depends much less on how wide the search space is than the share of good configurations does.</p>
+</div>
+</div>
+</div>
+<p>Fitting the noisy quadratic at every size, we find that out of the seven to nine hyperparameters we tune, small models have two effective hyperparameters, while models with 67M parameters or more have one. The drop comes mostly from adding parameters rather than data, and why it happens is still open, since earlier work found the same effective number across architectures that share a search space (Lourie, He, and Cho <a href="#ref-28" class="citation-ref">[28]</a>), and a parametrization such as muP may change it. Figure 6 shows the consequence in the same format as Figure 1(a), for every size from 4M to 134M, and its bar chart counts the configurations inside the 0.1 BPC circle at each size. Figure 7 shows the effective number of hyperparameters at every model size and training length.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figures/fig6_configs_by_size.gif" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Figure 6. Larger models put more configurations near the optimum. Each frame shows the random configurations that finished training at one model size, similarly to Figure 1(a). 10 out of 126 configurations fall inside the 0.1 BPC circle at 4M, where 2 of the 128 runs diverged, and out of 128, 8 at 8M, 13 at 17M, 23 at 34M, 27 at 67M, and 36 at 134M."><img src="figures/fig6_configs_by_size.gif" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Figure 6. Larger models put more configurations near the optimum"></a></p>
+</figure>
+</div>
+<figcaption><strong>Figure 6. Larger models put more configurations near the optimum.</strong> Each frame shows the random configurations that finished training at one model size, similarly to Figure 1(a). 10 out of 126 configurations fall inside the 0.1 BPC circle at 4M, where 2 of the 128 runs diverged, and out of 128, 8 at 8M, 13 at 17M, 23 at 34M, 27 at 67M, and 36 at 134M.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figures/fig7_effective_hyperparameters.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figure 7. Larger models have fewer effective hyperparameters. Effective number of hyperparameters at each model size and training length, estimated by fitting the noisy quadratic to random search with one fixed architecture per size. The eight checkpoints are the eight training lengths, from 5 to 40 tokens per parameter. Models below 67M parameters have two effective hyperparameters and larger ones have one, at every training length."><img src="figures/fig7_effective_hyperparameters.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:36.0%" alt="Figure 7. Larger models have fewer effective hyperparameters"></a></p>
+</figure>
+</div>
+<figcaption><strong>Figure 7. Larger models have fewer effective hyperparameters.</strong> Effective number of hyperparameters at each model size and training length, estimated by fitting the noisy quadratic to random search with one fixed architecture per size. The eight checkpoints are the eight training lengths, from 5 to 40 tokens per parameter. Models below 67M parameters have two effective hyperparameters and larger ones have one, at every training length.</figcaption>
+</figure>
+</div>
+<p>In our paper, we show that the expected gap between the best of <em>M</em> random configurations and the optimum shrinks like <span class="math inline">\(M^{-2/\gamma}\)</span>, so if 100 runs reach a given gap when γ = 2, about 14 reach it when γ = 1, while γ = 3 would need about 860. This is how much more tuning small models need, assuming the noise from random seeds is small.</p>
+<div class="takeaway callout callout-style-simple callout-tip no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Takeaway 2. We can model the random search with the noisy quadratic.</strong></p>
+<p>The noisy quadratic describes how the best losses from random search are distributed, which lets us measure the effective number of hyperparameters at each scale and predict how many runs each scale needs.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="a-model-of-the-loss-surface-that-spans-scales-is-hard-to-find" class="level3">
+<h3 class="anchored" data-anchor-id="a-model-of-the-loss-surface-that-spans-scales-is-hard-to-find">A model of the loss surface that spans scales is hard to find</h3>
+<p>We also tried to combine the noisy quadratic, which describes the loss surface at each scale, with the scaling law, which describes its minimum across scales, into one model that predicts the best hyperparameters at larger scales. None of the variants we tried comes close to the scaling law. On the held-out 268M model, the best one has a mean squared error of 0.0066 over all configurations, vs.&nbsp;0.00002 for the scaling law at the best hyperparameters, so we tune each scale separately.</p>
+<div class="takeaway callout callout-style-simple callout-tip no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Takeaway 3. A hyperparameter model that spans scales is hard to find.</strong></p>
+<p>Simple models of the loss surface capture its coarse shape across scales but not its finer details, so we tune each scale on its own instead of predicting its hyperparameters from smaller ones.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="extrapolation-hits-statistical-limits" class="level3">
+<h3 class="anchored" data-anchor-id="extrapolation-hits-statistical-limits">Extrapolation hits statistical limits</h3>
+<p>Even a well-tuned law runs into a second problem far from the data. We repeated the fit with independent samples of 128 random configurations per scale, and Figure 8 shows that the estimates agree well near the data but spread apart far from it, with irreducible losses from about 0.42 to 0.67 bits per character. Far out, the prediction is dominated by the irreducible loss ε, which is hard to pin down while the curve still looks like a straight line on a log-log plot, so small differences in the measured losses move the extrapolation a lot.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figures/fig8_extrapolation.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Figure 8. Independent estimates agree near the data and disagree far from it. Each color is a scaling law fit to a different random sample of 128 configurations per scale at 4M, 8M, 17M, and 34M parameters. The dotted lines show each fit’s irreducible loss, which ranges from about 0.42 to 0.67 bits per character."><img src="figures/fig8_extrapolation.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%" alt="Figure 8. Independent estimates agree near the data and disagree far from it"></a></p>
+</figure>
+</div>
+<figcaption><strong>Figure 8. Independent estimates agree near the data and disagree far from it.</strong> Each color is a scaling law fit to a different random sample of 128 configurations per scale at 4M, 8M, 17M, and 34M parameters. The dotted lines show each fit’s irreducible loss, which ranges from about 0.42 to 0.67 bits per character.</figcaption>
+</figure>
+</div>
+<p>This limitation matters when comparing models, since if we extrapolate two laws far enough, we are mostly comparing their estimates of ε. Our laws extrapolate well about an order of magnitude beyond the fitted range, from 34M to 268M parameters, and further out the prediction leans more and more on ε.</p>
+</section>
+</section>
+<section id="so-what-do-we-recommend-for-optimal-scaling" class="level2">
+<h2 class="anchored" data-anchor-id="so-what-do-we-recommend-for-optimal-scaling">So what do we recommend for optimal scaling?</h2>
+<p>Our recommendations rest on three facts:</p>
+<ol type="1">
+<li><p>With the pretraining data fixed, a model’s capabilities depend on its pretraining loss.</p></li>
+<li><p>With thorough tuning, pretraining scaling laws hold down to tiny models.</p></li>
+<li><p>And as models grow, they become much less sensitive to their hyperparameters, so the final scale-up needs far less tuning, which may also explain why hyperparameter transfer works reasonably well.</p></li>
+</ol>
+<p>These facts support model-centric research, where the data stays fixed and we change the model. Data-centric research needs different tools, because changing the data breaks the link between loss and capabilities.</p>
+<p><strong>Hold the data fixed and compare models by pretraining loss.</strong> Better loss does not always mean better downstream accuracy (McKenzie et al.&nbsp;<a href="#ref-29" class="citation-ref">[29]</a>, Wei et al.&nbsp;<a href="#ref-30" class="citation-ref">[30]</a>), but we only need models with the same loss to have the same capabilities, which Mayilvahanan et al.&nbsp;<a href="#ref-31" class="citation-ref">[31]</a> showed holds when the pretraining data is fixed, a property we call the perplexity-capability correspondence. A family with a better scaling law then reaches every loss, and every capability, at a lower cost.</p>
+<p><strong>Tune thoroughly where tuning is cheap, and verify that the search converged.</strong> For a fixed ratio of tokens to parameters, compute is quadratic in model size, so a model one tenth the size costs one hundredth as much, and we can afford far larger sweeps at small scale. In our experiments, one 268M run costs as much as 4 runs at 134M, 67 at 34M, or about 5,000 at 4M, so what we should budget is the total compute, sweeps included. Bayesian optimization or a manual grid may reach the best loss with fewer runs, but uniform random search is what lets us measure the loss surface and run the diagnostics below. If the best losses do not match the noisy quadratic, the search has probably not found the optimum, and our <a href="https://github.com/nicholaslourie/opda">opda library</a> implements this verification. Our own sweeps were built to study the loss surface, so a single comparison can often be done for much less.</p>
+<p><strong>Use hyperparameter transfer, but tune its starting point carefully.</strong> With muP, learning rates tuned on a small model transfer well across sizes, although muP can break with learnable gains, unusual optimizers such as Lion, or strong weight decay (Liang and Hashimoto <a href="#ref-3" class="citation-ref">[3]</a>, <a href="https://www.youtube.com/watch?v=OSYuUqGBQxw&amp;t=4338s">Lecture 11</a>). Our results do not question whether transfer works, but whether the small-scale sweep that transfer starts from finds the optimum in the first place. Transfer moves all the tuning to the smallest scale, which is exactly where the optimum is hardest to find, and the noisy quadratic can confirm that the base sweep reached it. If that sweep misses the optimum, or leaves a hyperparameter such as β2 untuned for the batch size, the transferred configuration starts off wrong, and we can falsely conclude that transfer, or the idea being tested, did not work.</p>
+<p><strong>Spend the budget unevenly across scales.</strong> This is what we would change if we designed our experiments again with the purpose of achieving optimal scaling. What matters is the error in the loss predicted at the target scale, not the accuracy of the law overall. Two things decide how much each scale contributes to that error. First, an error at either end of the fitted range moves the prediction at the target much more than an error near its center, as the left panel of Figure 9 shows. Second, the error at each scale shrinks as we spend more runs there, and it shrinks faster at large scales, which have fewer effective hyperparameters. Weighing both against the cost of a run at each scale gives the number of runs to spend at each scale, which our paper derives in closed form. In its example, with four scales where each run costs four times more than at the previous one and a target one step beyond the largest, the solution is 32, 1, 5, and 4 runs, which put 8.6%, 1.1%, 21.6%, and 68.7% of the compute at the four scales, as the middle and right panels of Figure 9 show. The recipe needs only the total budget, the cost of a run at each scale, and an estimate of γ.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="figures/fig9_allocation.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Figure 9. Where to spend tuning runs. (Left) The same error moves the prediction at the target much more when it sits at the largest scale (orange) than near the center of the fit (green). (Middle, right) Runs and share of compute per scale in the example of our paper, with two effective hyperparameters at the two smaller scales and one at the two larger ones."><img src="figures/fig9_allocation.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Figure 9. Where to spend tuning runs"></a></p>
+</figure>
+</div>
+<figcaption><strong>Figure 9. Where to spend tuning runs.</strong> (Left) The same error moves the prediction at the target much more when it sits at the largest scale (orange) than near the center of the fit (green). (Middle, right) Runs and share of compute per scale in the example of our paper, with two effective hyperparameters at the two smaller scales and one at the two larger ones.</figcaption>
+</figure>
+</div>
+<div class="takeaway callout callout-style-simple callout-tip no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Takeaway 4. We can recommend how to spend compute for optimal extrapolation.</strong></p>
+<p>Because we know how much each scale’s error moves the prediction and how fast random search converges at each scale, we can solve for the number of runs per scale that gives the most accurate extrapolation for a fixed budget.</p>
+</div>
+</div>
+</div>
+<p><strong>Fit the law on the tuned frontier, and compare near the data.</strong> Select the best configuration for each combination of parameters and tokens, decay the learning rate with a warmup-stable-decay schedule, which yields many training lengths from one run (Hägele et al.&nbsp;<a href="#ref-32" class="citation-ref">[32]</a>, Liang and Hashimoto <a href="#ref-3" class="citation-ref">[3]</a>, <a href="https://www.youtube.com/watch?v=OSYuUqGBQxw&amp;t=1266s">Lecture 11</a>), report how points are selected for the fit, and validate the law on a held-out larger scale. Compare models where their laws are fit, since far from the data the comparison mostly reflects the estimates of the irreducible loss.</p>
+<p><strong>Check if each assumption holds.</strong> We check our assumptions with four questions:</p>
+<ul>
+<li><p>Do the best losses from random search match the noisy quadratic at each size?</p></li>
+<li><p>Does tuning get easier as the model grows?</p></li>
+<li><p>Do models with the same loss have the same capabilities on a few evaluations?</p></li>
+<li><p>Does the law predict a held-out larger scale?</p></li>
+</ul>
+<p>If a check fails, the likely cause is a bug, a modeling problem, or poor hyperparameters, so we fix the setup before judging the idea. When all four checks pass, we have good reason to expect the small-scale result to hold at larger scales.</p>
+<p><strong>Limitations and future work.</strong> Everything here is model-centric, since changing the pretraining data breaks the perplexity-capability correspondence and downstream scaling laws are not reliable enough to replace it. Our results come from one corpus, FineWeb-Edu, with a fixed tokenizer and vocabulary, and our largest model has 268M parameters. We also note that muP may change how sensitivity evolves with scale.</p>
+</section>
+<section id="citation" class="level2">
+<h2 class="anchored" data-anchor-id="citation">Citation</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bibtex code-with-copy"><code class="sourceCode bibtex"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">@article</span>{<span class="ot">lourie2026small</span>,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">title</span>={Small-Scale Experiments: Are We There Yet?},</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">author</span>={Lourie, Nicholas and Cho, Kyunghyun and Ullrich, Karen and Lotfi, Sanae},</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">journal</span>={arXiv preprint arXiv:2608.11859},</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">year</span>={2026}</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<div class="references">
+<p><span id="ref-1">[1]</span> Cottier, Ben, Robi Rahman, Loredana Fattorini, Nestor Maslej, Tamay Besiroglu, and David Owen. “The Rising Costs of Training Frontier AI Models.” <a href="https://arxiv.org/abs/2405.21015">arXiv preprint</a> (2024).</p>
+<p><span id="ref-2">[2]</span> Denain, Jean-Stanislas, and Cheryl Wu. “Final Training Runs Account for a Minority of R&amp;D Compute Spending.” <a href="https://epoch.ai/gradient-updates/r-and-d-vs-training-compute"><em>Epoch AI</em></a>, Gradient Updates, 2026.</p>
+<p><span id="ref-3">[3]</span> Liang, Percy, and Tatsunori Hashimoto. “Lecture 9: Scaling Laws 1.” <em>Stanford CS336: Language Modeling from Scratch</em>, Spring 2025. <a href="https://www.youtube.com/watch?v=6Q-ESEmDf4Q">YouTube video</a>.</p>
+<p><span id="ref-4">[4]</span> Hoffmann, Jordan, Sebastian Borgeaud, Arthur Mensch, Elena Buchatskaya, Trevor Cai, Eliza Rutherford, Diego de Las Casas, et al.&nbsp;“Training Compute-Optimal Large Language Models.” <a href="https://arxiv.org/abs/2203.15556">NeurIPS 2022</a>.</p>
+<p><span id="ref-5">[5]</span> Rosenfeld, Jonathan S., Amir Rosenfeld, Yonatan Belinkov, and Nir Shavit. “A Constructive Prediction of the Generalization Error Across Scales.” <a href="https://arxiv.org/abs/1909.12673">ICLR 2020</a>.</p>
+<p><span id="ref-6">[6]</span> Cortes, Corinna, Lawrence D. Jackel, Sara A. Solla, Vladimir Vapnik, and John S. Denker. “Learning Curves: Asymptotic Values and Rate of Convergence.” <a href="https://proceedings.neurips.cc/paper_files/paper/1993/file/1aa48fc4880bb0c9b8a3bf979d3b917e-Paper.pdf">NeurIPS 1993</a>.</p>
+<p><span id="ref-7">[7]</span> Hestness, Joel, Sharan Narang, Newsha Ardalani, Gregory Diamos, Heewoo Jun, Hassan Kianinejad, Md. Mostofa Ali Patwary, Yang Yang, and Yanqi Zhou. “Deep Learning Scaling Is Predictable, Empirically.” <a href="https://arxiv.org/abs/1712.00409">arXiv preprint</a> (2017).</p>
+<p><span id="ref-8">[8]</span> Kaplan, Jared, Sam McCandlish, Tom Henighan, Tom B. Brown, Benjamin Chess, Rewon Child, Scott Gray, Alec Radford, Jeffrey Wu, and Dario Amodei. “Scaling Laws for Neural Language Models.” <a href="https://arxiv.org/abs/2001.08361">arXiv preprint</a> (2020).</p>
+<p><span id="ref-9">[9]</span> OpenAI. “GPT-4 Technical Report.” <a href="https://arxiv.org/abs/2303.08774">arXiv preprint</a> (2023).</p>
+<p><span id="ref-10">[10]</span> Grattafiori, Aaron, Abhimanyu Dubey, Abhinav Jauhri, Abhinav Pandey, Abhishek Kadian, Ahmad Al-Dahle, Aiesha Letman, et al.&nbsp;“The Llama 3 Herd of Models.” <a href="https://arxiv.org/abs/2407.21783">arXiv preprint</a> (2024).</p>
+<p><span id="ref-11">[11]</span> DeepSeek-AI. “DeepSeek LLM: Scaling Open-Source Language Models with Longtermism.” <a href="https://arxiv.org/abs/2401.02954">arXiv preprint</a> (2024).</p>
+<p><span id="ref-12">[12]</span> Li, Houyi, Wenzhen Zheng, Qiufeng Wang, Hanshan Zhang, Zili Wang, Shijie Xuyang, Yuantao Fan, et al.&nbsp;“Predictable Scale: Part I, Step Law — Optimal Hyperparameter Scaling Law in Large Language Model Pretraining.” <a href="https://arxiv.org/abs/2503.04715">arXiv preprint</a> (2025).</p>
+<p><span id="ref-13">[13]</span> Bergsma, Shane, Nolan Dey, Gurpreet Gosal, Gavia Gray, Daria Soboleva, and Joel Hestness. “Power Lines: Scaling Laws for Weight Decay and Batch Size in LLM Pre-training.” <a href="https://arxiv.org/abs/2505.13738">NeurIPS 2025</a>.</p>
+<p><span id="ref-14">[14]</span> Yang, Greg, Edward J. Hu, Igor Babuschkin, Szymon Sidor, Xiaodong Liu, David Farhi, Nick Ryder, Jakub Pachocki, Weizhu Chen, and Jianfeng Gao. “Tensor Programs V: Tuning Large Neural Networks via Zero-Shot Hyperparameter Transfer.” <a href="https://arxiv.org/abs/2203.03466">NeurIPS 2021</a>.</p>
+<p><span id="ref-15">[15]</span> Lourie, Nicholas, Michael Y. Hu, and Kyunghyun Cho. “Scaling Laws Are Unreliable for Downstream Tasks: A Reality Check.” <a href="https://arxiv.org/abs/2507.00885">Findings of EMNLP 2025</a>.</p>
+<p><span id="ref-16">[16]</span> Porian, Tomer, Mitchell Wortsman, Jenia Jitsev, Ludwig Schmidt, and Yair Carmon. “Resolving Discrepancies in Compute-Optimal Scaling of Language Models.” <a href="https://arxiv.org/abs/2406.19146">NeurIPS 2024</a>.</p>
+<p><span id="ref-17">[17]</span> Pearce, Tim, and Jinyeop Song. “Reconciling Kaplan and Chinchilla Scaling Laws.” <a href="https://arxiv.org/abs/2406.12907">TMLR 2024</a>.</p>
+<p><span id="ref-18">[18]</span> Besiroglu, Tamay, Ege Erdil, Matthew Barnett, and Josh You. “Chinchilla Scaling: A Replication Attempt.” <a href="https://arxiv.org/abs/2404.10102">arXiv preprint</a> (2024).</p>
+<p><span id="ref-19">[19]</span> Li, Margaret, Sneha Kudugunta, and Luke Zettlemoyer. “(Mis)Fitting: A Survey of Scaling Laws.” <a href="https://arxiv.org/abs/2502.18969">ICLR 2025</a>.</p>
+<p><span id="ref-20">[20]</span> Li, Houyi, Wenzhen Zheng, Qiufeng Wang, Zhenyu Ding, Haoying Wang, Zili Wang, Shijie Xuyang, et al.&nbsp;“Predictable Scale: Part II, Farseer: A Refined Scaling Law in Large Language Models.” <a href="https://arxiv.org/abs/2506.10972">NeurIPS 2025</a>.</p>
+<p><span id="ref-21">[21]</span> Meta AI. <em>Meta Lingua</em>. <a href="https://github.com/facebookresearch/lingua">GitHub repository</a>, 2024.</p>
+<p><span id="ref-22">[22]</span> Penedo, Guilherme, Hynek Kydlíček, Loubna Ben Allal, Anton Lozhkov, Margaret Mitchell, Colin Raffel, Leandro Von Werra, and Thomas Wolf. “The FineWeb Datasets: Decanting the Web for the Finest Text Data at Scale.” <a href="https://arxiv.org/abs/2406.17557">NeurIPS 2024 Datasets and Benchmarks</a>.</p>
+<p><span id="ref-23">[23]</span> Hilton, Jacob, Jie Tang, and John Schulman. “Scaling Laws for Single-Agent Reinforcement Learning.” <a href="https://arxiv.org/abs/2301.13442">arXiv preprint</a> (2023).</p>
+<p><span id="ref-24">[24]</span> Lourie, Nicholas, Kyunghyun Cho, Karen Ullrich, and Sanae Lotfi. “Small-Scale Experiments: Are We There Yet?” <a href="https://arxiv.org/abs/2608.11859">arXiv preprint</a> (2026).</p>
+<p><span id="ref-25">[25]</span> Ivgi, Maor, Yair Carmon, and Jonathan Berant. “Scaling Laws Under the Microscope: Predicting Transformer Performance from Small Scale Experiments.” <a href="https://arxiv.org/abs/2202.06387">Findings of EMNLP 2022</a>.</p>
+<p><span id="ref-26">[26]</span> Xiao, Lechao. “Rethinking Conventional Wisdom in Machine Learning: From Generalization to Scaling.” <a href="https://arxiv.org/abs/2409.15156">arXiv preprint</a> (2024).</p>
+<p><span id="ref-27">[27]</span> Marek, Martin, Sanae Lotfi, Aditya Somasundaram, Andrew Gordon Wilson, and Micah Goldblum. “Small Batch Size Training for Language Models: When Vanilla SGD Works, and Why Gradient Accumulation Is Wasteful.” <a href="https://arxiv.org/abs/2507.07101">NeurIPS 2025</a>.</p>
+<p><span id="ref-28">[28]</span> Lourie, Nicholas, He He, and Kyunghyun Cho. “Hyperparameter Loss Surfaces Are Simple Near Their Optima.” <a href="https://arxiv.org/abs/2510.02721">COLM 2025</a>.</p>
+<p><span id="ref-29">[29]</span> McKenzie, Ian R., Alexander Lyzhov, Michael Pieler, Alicia Parrish, Aaron Mueller, Ameya Prabhu, Euan McLean, et al.&nbsp;“Inverse Scaling: When Bigger Isn’t Better.” <a href="https://arxiv.org/abs/2306.09479">TMLR 2023</a>.</p>
+<p><span id="ref-30">[30]</span> Wei, Jason, Najoung Kim, Yi Tay, and Quoc V. Le. “Inverse Scaling Can Become U-Shaped.” <a href="https://arxiv.org/abs/2211.02011">EMNLP 2023</a>.</p>
+<p><span id="ref-31">[31]</span> Mayilvahanan, Prasanna, Thaddäus Wiedemer, Sayak Mallick, Matthias Bethge, and Wieland Brendel. “LLMs on the Line: Data Determines Loss-to-Loss Scaling Laws.” <a href="https://arxiv.org/abs/2502.12120">ICML 2025</a>.</p>
+<p><span id="ref-32">[32]</span> Hägele, Alexander, Elie Bakouch, Atli Kosson, Loubna Ben Allal, Leandro Von Werra, and Martin Jaggi. “Scaling Laws and Compute-Optimal Training Beyond Fixed Training Durations.” <a href="https://arxiv.org/abs/2405.18392">NeurIPS 2024</a>.</p>
+<p><span id="ref-33">[33]</span> Vaswani, Ashish, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, and Illia Polosukhin. “Attention Is All You Need.” <a href="https://arxiv.org/abs/1706.03762">NeurIPS 2017</a>.</p>
+<p><span id="ref-34">[34]</span> Baevski, Alexei, and Michael Auli. “Adaptive Input Representations for Neural Language Modeling.” <a href="https://arxiv.org/abs/1809.10853">ICLR 2019</a>.</p>
+<p><span id="ref-35">[35]</span> Nguyen, Toan Q., and Julian Salazar. “Transformers without Tears: Improving the Normalization of Self-Attention.” <a href="https://arxiv.org/abs/1910.05895">IWSLT 2019</a>.</p>
+<p><span id="ref-36">[36]</span> Xiong, Ruibin, Yunchang Yang, Di He, Kai Zheng, Shuxin Zheng, Chen Xing, Huishuai Zhang, Yanyan Lan, Liwei Wang, and Tie-Yan Liu. “On Layer Normalization in the Transformer Architecture.” <a href="https://arxiv.org/abs/2002.04745">ICML 2020</a>.</p>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function () {
+  'use strict';
+
+  window.addEventListener('load', function () {
+
+    // All inline footnote reference superscripts
+    var refs = Array.from(document.querySelectorAll('sup.footnote-ref, a.footnote-ref'));
+    if (!refs.length) return;
+
+    // For each ref, find its corresponding margin footnote element.
+    // Quarto links them: the ref has href="#fn1", the margin note has id="fn1"
+    // (or a parent .column-margin wraps it).
+    var pairs = [];
+
+    refs.forEach(function (ref) {
+      var link = ref.tagName === 'A' ? ref : ref.querySelector('a');
+      if (!link) return;
+
+      var href = link.getAttribute('href');
+      if (!href) return;
+
+      var targetId = href.replace(/^#/, '');
+      var target = document.getElementById(targetId);
+      if (!target) return;
+
+      // Walk up to find the .column-margin wrapper (Quarto wraps each
+      // margin footnote in one)
+      var marginEl = target.closest('.column-margin') || target;
+
+      pairs.push({ ref: ref, margin: marginEl });
+    });
+
+    if (!pairs.length) return;
+
+    var allMargins = pairs.map(function (p) { return p.margin; });
+
+    function highlight(active) {
+      allMargins.forEach(function (el) {
+        if (el === active) {
+          el.style.opacity = '1';
+          el.style.filter = '';
+        } else {
+          el.style.opacity = '0.2';
+          el.style.filter = 'grayscale(1)';
+        }
+      });
+    }
+
+    function reset() {
+      allMargins.forEach(function (el) {
+        el.style.opacity = '';
+        el.style.filter = '';
+      });
+    }
+
+    pairs.forEach(function (pair) {
+      // Hover on the in-text superscript
+      pair.ref.addEventListener('mouseenter', function () { highlight(pair.margin); });
+      pair.ref.addEventListener('mouseleave', reset);
+
+      // Hover on the margin note itself
+      pair.margin.addEventListener('mouseenter', function () { highlight(pair.margin); });
+      pair.margin.addEventListener('mouseleave', reset);
+    });
+
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/reliable-ai\.review");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>
