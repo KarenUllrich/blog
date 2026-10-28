@@ -1,22 +1,30 @@
-/* Boxes in the colors of the Google Doc draft (post-only styles). */
-.callout.tldr, .callout.definition { background-color: #F3F1FA; border-left-color: #7B5EA7 !important; }
-.callout.takeaway { background-color: #E6F4EA; border-left-color: #34A853 !important; }
-.callout.tldr .callout-title-container, .callout.tldr .callout-header { font-weight: 600; }
-.small-note { font-size: 0.85em; color: #666; }
-/* Long figure captions read better in normal case than in the site's small caps. */
-.quarto-figure figcaption, figcaption.figure-caption, .figure-caption { text-transform: none !important; letter-spacing: normal !important; font-size: 0.92rem !important; line-height: 1.5 !important; }
-/* Box text at nearly body size. */
-.callout.tldr .callout-body-container, .callout.definition .callout-body-container, .callout.takeaway .callout-body-container { font-size: 0.97rem; line-height: 1.6; }
-/* Inline citation links use the default link blue; just keep the number from wrapping. */
+/* Post-only styles for "Small-Scale Experiments: Are We There Yet?" */
+
+/* Center figures in the body column. */
+.quarto-figure-center img.figure-img { margin-inline: auto; }
+
+/* Highlight boxes: one unified style for every blockquote (TL;DR, notes, takeaways),
+   keyed to the theme accent so it matches the site color scheme. */
+blockquote {
+  background-color: #eef3fb;
+  border-left: 4px solid var(--bs-link-color, #4582ec);
+  border-radius: 4px;
+  padding: 0.85rem 1.1rem;
+  margin: 1.2rem 0;
+  color: inherit;
+  font-size: 0.97rem;
+  line-height: 1.6;
+}
+blockquote > :first-child { margin-top: 0; }
+blockquote > :last-child { margin-bottom: 0; }
+
+/* Inline citation links use the default link blue; keep the number from wrapping. */
 a.citation-ref { white-space: nowrap; }
+
 /* Reference list: compact, scannable, with a hanging indent so the numbers line up. */
 .references { font-size: 0.9rem; line-height: 1.5; }
 .references p { padding-left: 2.4em; text-indent: -2.4em; margin-bottom: 0.55em; }
-.references p > span[id^="ref-"] { font-weight: 600; color: var(--bs-link-color, #0d6efd); }
-/* Highlight the whole entry when jumped to from a citation (id sits on the number span). */
+.references p > span[id^="ref-"] { font-weight: 600; }
+/* Highlight the whole entry when jumped to from a citation. */
 .references span[id^="ref-"]:target { scroll-margin-top: 5rem; }
-.references p:has(> span[id^="ref-"]:target) { background-color: #F3F1FA; border-radius: 4px; box-shadow: 0 0 0 6px #F3F1FA; }
-/* Center every figure in the body column (the lightbox link wrapper defeats fig-align). */
-.quarto-figure a.lightbox, .quarto-figure .figure-img { display: block; margin-left: auto; margin-right: auto; }
-.quarto-figure a.lightbox { text-align: center; }
-.quarto-figure img { max-width: 100%; }
+.references p:has(> span[id^="ref-"]:target) { background-color: #eef3fb; border-radius: 4px; box-shadow: 0 0 0 6px #eef3fb; }
