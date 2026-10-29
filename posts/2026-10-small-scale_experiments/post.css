@@ -17,14 +17,3 @@ blockquote {
 }
 blockquote > :first-child { margin-top: 0; }
 blockquote > :last-child { margin-bottom: 0; }
-
-/* Inline citation links use the default link blue; keep the number from wrapping. */
-a.citation-ref { white-space: nowrap; }
-
-/* Reference list: compact, scannable, with a hanging indent so the numbers line up. */
-.references { font-size: 0.9rem; line-height: 1.5; }
-.references p { padding-left: 2.4em; text-indent: -2.4em; margin-bottom: 0.55em; }
-.references p > span[id^="ref-"] { font-weight: 600; }
-/* Highlight the whole entry when jumped to from a citation. */
-.references span[id^="ref-"]:target { scroll-margin-top: 5rem; }
-.references p:has(> span[id^="ref-"]:target) { background-color: #eef3fb; border-radius: 4px; box-shadow: 0 0 0 6px #eef3fb; }
